@@ -54,29 +54,30 @@
 </div>
 </aside>
 
-    <div class="container">
-        <h1>Islamic Prayer Times for Cairo</h1>
-        <div class="button-container">
-            <button id="show-today">Show Today</button>
-            <button id="show-tomorrow">Show Tomorrow</button>
-        </div>
-        <div class="prayer-times">
-            <ul id="times-today">
-                <!-- Today's prayer times will be dynamically added here -->
-            </ul>
-            <ul id="times-tomorrow">
-                <!-- Tomorrow's prayer times will be dynamically added here -->
-            </ul>
-        </div>
-    </div>
+<div class="container">
+  <h1>Islamic Prayer Times for: <span id="city-name">Your City</span></h1>
+  <div class="button-container">
+      <button id="show-today">Show Today</button>
+      <button id="show-tomorrow">Show Tomorrow</button>
+  </div>
+  <div class="prayer-times">
+      <ul id="times-today">
+          <!-- Today's prayer times will be dynamically added here -->
+      </ul>
+      <ul id="times-tomorrow">
+          <!-- Tomorrow's prayer times will be dynamically added here -->
+      </ul>
+  </div>
+</div>
 
     <footer class="footer">Made By MMS</footer>
     
 
     
     <!-- Include the Adhan.js library -->
-    <script src="https://cdn.jsdelivr.net/gh/batoulapps/adhan-js@2.5.0/dist/Adhan.js"></script>
-    <script src="assets/pray/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/adhan@4.4.3/lib/cjs/Adhan.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/adhan-extended@6.1.0/lib/bundles/adhan.umd.min.js"></script>
+    <script src="assets/pray/pray.js"></script>
     <script src="assets/pray/adhan.js"></script>
     <script>
         function redirectToMobileSite() {

@@ -7,8 +7,8 @@
   <link rel="stylesheet" href="styles.css">
   <style>
     :root {
-        --card-background: #ffffff; /* Light mode card background */
-        --card-border-color: #ffffff; /* Light mode card border color */
+      --card-background: #ffffff; /* Light mode card background */
+      --card-border-color: #ffffff; /* Light mode card border color */
     }
     
     @media (prefers-color-scheme: dark) {
@@ -19,8 +19,8 @@
     }
     
     :root {
-        --background: rgb(233, 233, 233);
-        --color: #000000;
+      --background: rgb(233, 233, 233);
+      --color: #000000;
     }
     
     body {
@@ -93,7 +93,6 @@
       margin-top: 20px;
       font-size: 16px;
     }
-    
   </style>
 </head>
 <body>
@@ -107,6 +106,7 @@
   <button id="start-button" class="modern-button">Find Qibla</button>
 
   <p id="location-info">Click the button to find your Qibla direction.</p>
+
 
   <script src="script.js"></script>
   <script>
@@ -156,18 +156,20 @@ function startCompass() {
 
 function onDeviceOrientation(event) {
     const heading = event.alpha;
-
     const blueLine = document.getElementById('blue-line');
     const redLine = document.getElementById('red-line');
 
-    // Rotate blue line based on device orientation
-    blueLine.style.transform = `translateX(-50%) translateY(-100%) rotate(${heading}deg)`;
+    // Fix the inverted compass issue by inverting the heading
+    const correctedHeading = (360 - heading) % 360;
+
+    // Rotate blue line based on corrected device orientation
+    blueLine.style.transform = `translateX(-50%) translateY(-100%) rotate(${correctedHeading}deg)`;
 
     // Rotate red line to show Qibla direction
     redLine.style.transform = `translateX(-50%) translateY(-100%) rotate(${qiblaDirection}deg)`;
 
     // Check if blue line is aligned with the Qibla direction
-    const isAligned = Math.abs((heading - qiblaDirection + 360) % 360) < 5;
+    const isAligned = Math.abs((correctedHeading - qiblaDirection + 360) % 360) < 5;
 
     // Set the color of the blue line based on alignment
     blueLine.style.backgroundColor = isAligned ? 'green' : '#007860';

@@ -33,19 +33,22 @@ function selectSuggestion(suggestion) {
 
 function updateMap() {
   // Get the search term from the input field
-  const searchTerm = document.getElementById('search-term').value || 'mosque';
+  const searchTerm = document.getElementById('search-term').value || 'مسجد';
 
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(position => {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-      updateMapWithLocation(lat, lng, searchTerm);
-    }, () => {
-      alert('Unable to retrieve your location');
-    });
-  } else {
-    alert('Geolocation is not supported by this browser.');
-  }
+  navigator.geolocation.getCurrentPosition(position => {
+    const lat = position.coords.latitude;
+    const lng = position.coords.longitude;
+    updateMapWithLocation(lat, lng, searchTerm);
+  }, 
+  () => {
+    alert('Unable to retrieve your location');
+  }, 
+  {
+    enableHighAccuracy: true,  // Add this option to improve accuracy
+    timeout: 10000,            // Set timeout in case geolocation takes too long
+    maximumAge: 0              // Disable caching of location results
+  });
+  
 }
 
 function updateMapWithLocation(lat, lng, searchTerm) {

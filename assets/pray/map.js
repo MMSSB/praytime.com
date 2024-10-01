@@ -35,16 +35,19 @@ function updateMap() {
   // Get the search term from the input field
   const searchTerm = document.getElementById('search-term').value || 'مسجد';
 
+  // Try geolocation first
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(position => {
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
 
-      // Ensure the map gets the updated coordinates
+      // Update the map with the accurate position
       updateMapWithLocation(lat, lng, searchTerm);
     }, 
     () => {
-      alert('Unable to retrieve your location. Please make sure location services are enabled.');
+      alert('Unable to retrieve your location. Please manually enter your location below.');
+      // Show manual input fields when geolocation fails
+      document.getElementById('manual-location').style.display = 'block';
     }, 
     {
       enableHighAccuracy: true,  // Attempt to get the most accurate location possible
@@ -65,6 +68,16 @@ function updateMapWithLocation(lat, lng, searchTerm) {
 
   // Update the iframe src to the Google Maps search query
   document.getElementById('map').src = query;
+}
+
+// Function to handle manual location submission
+function manualLocation() {
+  const lat = document.getElementById('manual-lat').value;
+  const lng = document.getElementById('manual-lng').value;
+  const searchTerm = document.getElementById('search-term').value || 'مسجد';
+  
+  // Update the map with the manually entered location
+  updateMapWithLocation(lat, lng, searchTerm);
 }
 
 // Call the function to initialize the map when the page loads

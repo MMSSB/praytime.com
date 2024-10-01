@@ -42,10 +42,6 @@ function updateMap() {
       updateMapWithLocation(lat, lng, searchTerm);
     }, () => {
       alert('Unable to retrieve your location');
-    }, {
-      enableHighAccuracy: true, // Use more accurate geolocation
-      timeout: 10000, // Timeout after 10 seconds
-      maximumAge: 0 // Do not use cached position
     });
   } else {
     alert('Geolocation is not supported by this browser.');
@@ -53,12 +49,12 @@ function updateMap() {
 }
 
 function updateMapWithLocation(lat, lng, searchTerm) {
-  // Build the Google Maps search query URL
+  // Create a Google Maps search query for the specified term
   const query = `https://www.google.com/maps/embed/v1/search?q=${encodeURIComponent(searchTerm)}&center=${lat},${lng}&zoom=15&key=AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao`;
 
-  // Update the iframe src with the new query
+  // Update the iframe src to the Google Maps search query
   document.getElementById('map').src = query;
 }
 
-// Initialize the map on page load
+// Call the function to initialize the map when the page loads
 window.onload = updateMap;

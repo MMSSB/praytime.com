@@ -1,38 +1,47 @@
-const suggestions = ['mosque', 'masjid', 'مسجد'];
+function updateMapWithLocation(lat, lng, searchTerm) {
+  // Initialize the map with user's location
+  const map = new google.maps.Map(document.getElementById('map'), {
+    center: { lat: lat, lng: lng },
+    zoom: 15
+  });
 
-function showSuggestions() {
-  const input = document.getElementById('search-term').value.toLowerCase();
-  const suggestionsBox = document.getElementById('suggestions');
+  // Create a request object for nearby search
+  const request = {
+    location: { lat: lat, lng: lng },
+    radius: 5000, // Search within a 5 km radius
+    keyword: searchTerm // Use the search term (e.g., "mosque")
+  };
 
-  // Clear previous suggestions
-  suggestionsBox.innerHTML = '';
+  // Create the Places service and perform a nearby search
+  const service = new google.maps.places.PlacesService(map);
+  service.nearbySearch(request, (results, status) => {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      // Clear any existing markers (optional step)
+      clearMarkers();
 
-  if (input) {
-    // Filter suggestions based on user input
-    const filteredSuggestions = suggestions.filter(suggestion => suggestion.toLowerCase().startsWith(input));
+      // Loop through the results and place markers for each mosque
+      results.forEach(place => {
+        const marker = new google.maps.Marker({
+          map: map,
+          position: place.geometry.location,
+          title: place.name
+        });
 
-    // Display filtered suggestions
-    filteredSuggestions.forEach(suggestion => {
-      const suggestionElement = document.createElement('div');
-      suggestionElement.classList.add('suggestion');
-      suggestionElement.innerText = suggestion;
-      suggestionElement.onclick = () => selectSuggestion(suggestion);
-      suggestionsBox.appendChild(suggestionElement);
-    });
-  }
-}
-
-function selectSuggestion(suggestion) {
-  // Set the selected suggestion in the input field
-  document.getElementById('search-term').value = suggestion;
-  // Clear the suggestions box
-  document.getElementById('suggestions').innerHTML = '';
-  // Trigger the search
-  updateMap();
+        // Optionally, add an info window to display place details
+        const infowindow = new google.maps.InfoWindow({
+          content: `<strong>${place.name}</strong><br>${place.vicinity}`
+        });
+        marker.addListener('click', () => {
+          infowindow.open(map, marker);
+        });
+      });
+    } else {
+      alert('No mosques found near your location.');
+    }
+  });
 }
 
 function updateMap() {
-  // Get the search term from the input field
   const searchTerm = document.getElementById('search-term').value || 'مسجد';
 
   if (navigator.geolocation) {
@@ -41,20 +50,21 @@ function updateMap() {
       const lng = position.coords.longitude;
       updateMapWithLocation(lat, lng, searchTerm);
     }, () => {
-      alert('Unable to retrieve your location');
+      alert('Unable to retrieve your location.');
+    }, {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
     });
   } else {
     alert('Geolocation is not supported by this browser.');
   }
 }
 
-function updateMapWithLocation(lat, lng, searchTerm) {
-  // Create a Google Maps search query for the specified term
-  const query = `https://www.google.com/maps/embed/v1/search?q=${encodeURIComponent(searchTerm)}&center=${lat},${lng}&zoom=15&key=AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao`;
-
-  // Update the iframe src to the Google Maps search query
-  document.getElementById('map').src = query;
+// Clear any existing markers on the map (optional function)
+function clearMarkers() {
+  // Implement marker clearing logic if needed
 }
 
-// Call the function to initialize the map when the page loads
+// Initialize the map when the page loads
 window.onload = updateMap;

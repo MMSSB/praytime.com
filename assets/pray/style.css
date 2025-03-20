@@ -247,7 +247,22 @@ header h1 {
         align-content: center;
         text-align: center;
 }
-
+.date-details { 
+    font-size: 1.1rem; 
+    margin-bottom: 1rem; 
+    text-align: center;
+}
+.islamic-date { 
+    font-size: 1.2rem; 
+    font-weight: 600; 
+    margin-bottom: 0.25rem; 
+    text-align: center;
+}
+.calendar-type { 
+    color: #666; 
+    font-size: 0.9rem;
+    text-align: center; 
+}
 @media (min-width: 769px) {
     .sidebar {
         transform: translateX(0) !important;

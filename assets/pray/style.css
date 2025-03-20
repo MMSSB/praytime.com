@@ -263,6 +263,7 @@ header h1 {
     font-size: 0.9rem;
     text-align: center; 
 }
+
 @media (min-width: 769px) {
     .sidebar {
         transform: translateX(0) !important;

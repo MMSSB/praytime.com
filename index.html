@@ -1,94 +1,99 @@
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <link rel="shortcut icon" href="assets/pray/pray.ico" type="image/x-icon">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrayTime.com</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="stylesheet" href="assets/pray/style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PrayTime</title>
+    <meta name="description" content="Islamic prayer time application" />
+    <!-- <meta name="author" content="Lovable" /> -->
+    <!-- <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" /> -->
+    <link rel="stylesheet" href="./src/styles.css" />
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="src/pray.ico" type="image/x-icon">
+  </head>
+
+  <body>
     <div class="app">
-        <!-- Hamburger Menu Button -->
-        <button class="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
+      <!-- Hamburger Menu Button - moved to right side -->
+      <button class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div class="logo">
+          <img src="./src/pray.png" alt="Islamic App" class="logo-icon">
+          <h2>PrayTime</h2>
+        </div>
+        <nav>
+          <a href="index.html" class="active">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Home
+          </a>
+          <a href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Coming soon
+          </a>
+          <a href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Coming soon
+          </a>
+          <a href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Coming soon
+          </a>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header>
+          <h1>Dashboard</h1>
+          <p class="date" id="current-date">Thursday, March 20, 2025</p>
+        </header>
+
+        <div class="location">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span id="city-name">Loading location...</span>
+        </div>
+
+        <div class="current-time">
+          <div class="time" id="current-time">12:00:00 PM</div>
+          <div class="date-details" id="date-details">Thursday, March 20</div>
+          <div class="islamic-date" id="islamic-date">15 Ramadan 1445</div>
+          <div class="calendar-type">Islamic Calendar</div>
+          <div class="current-prayer" id="current-prayer"></div>
+        </div>
+
+        <section class="prayer-times">
+          <div class="section-header">
+            <h2>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+              Next Prayer
+            </h2>
+            <div class="tabs">
+              <button id="show-today" class="active">Today</button>
+              <button id="show-tomorrow">Tomorrow</button>
+            </div>
+          </div>
         
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="logo">
-                <img src="assets/pray/Mosquepng.parspng.com-13.png" alt="Islamic App" class="logo-icon">
-                <!-- <span>PrayTime</span> -->
-                 <h2>PrayTime</h2>
-
-            </div>
-            <nav>
-                <a href="index.html" class="active">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                    Home
-                </a>
-                <a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    <!-- Prayer Times -->
-                    Comming soon
-                </a>
-                <a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M3 6h18"/><path d="M3 18h18"/></svg> -->
-                    <!-- Masjid Finder -->
-                    Comming soon
-                </a>
-                <a href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16.2 7.8l-2 6.3-6.4 2.1 2-6.3z"/></svg> -->
-                    <!-- Qibla Direction -->
-                    Comming soon
-                </a>
-            </nav>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <header>
-                <h1>Dashboard</h1>
-                <p class="date">Thursday, March 20, 2025</p>
-            </header>
-
-            <div class="location">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span id="city-name">Loading location...</span>
-            </div>
-
-            <div class="current-time">
-                <div class="time" id="current-time">12:44:54 PM</div>
-                <div class="date-details">Thursday, March 20</div>
-                <div class="islamic-date" id="islamic-date">15 Ramadan 1445</div>
-                <div class="calendar-type">Islamic Calendar</div>
-            </div>
-
-            <section class="prayer-times">
-                <div class="section-header">
-                    <h2>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
-                        Next Prayer
-                    </h2>
-                    <div class="tabs">
-                        <button id="show-today" class="active">Today</button>
-                        <button id="show-tomorrow">Tomorrow</button>
-                    </div>
-                </div>
-
-                <div class="times-container">
-                    <ul id="times-today" class="prayer-list"></ul>
-                    <ul id="times-tomorrow" class="prayer-list" style="display: none;"></ul>
-                </div>
-            </section>
-        </main>
+          <div class="times-container">
+            <ul id="times-today" class="prayer-grid">
+              <!-- Prayer times for today will be dynamically inserted here -->
+            </ul>
+            <ul id="times-tomorrow" class="prayer-grid" style="display: none;">
+              <!-- Prayer times for tomorrow will be dynamically inserted here -->
+            </ul>
+          </div>
+        </section>
+      </main>
     </div>
-    <script src="assets/pray/adhan.js"></script>
-    <script src="assets/pray/app.js"></script>
-</body>
+    <script src="src/adhan.js"></script>
+    <script src="src/app.js"></script>
+  </body>
 </html>

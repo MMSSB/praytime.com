@@ -279,3 +279,29 @@ function getCityName(latitude, longitude) {
             console.error('Error fetching location:', error);
         });
 }
+
+// Add this at the top of each JS file (after DOMContentLoaded)
+function applyTheme(theme) {
+    const body = document.body;
+    body.classList.remove('light', 'dark');
+    
+    if (theme === 'system') {
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            body.classList.add('dark');
+        } else {
+            body.classList.add('light');
+        }
+    } else {
+        body.classList.add(theme);
+    }
+}
+
+const savedTheme = localStorage.getItem('theme') || 'system';
+applyTheme(savedTheme);
+
+// Listen for system theme changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (localStorage.getItem('theme') === 'system') {
+        applyTheme('system');
+    }
+});

@@ -1119,7 +1119,7 @@ body.dark .current-time {
 
 .last-updated {
   font-size: 0.8rem;
-  color: #666;
+  color: var(--secondary-foreground);
 }
 
 .weather-main {
@@ -1136,6 +1136,7 @@ body.dark .current-time {
 .weather-icon img {
   width: 100px;
   height: 100px;
+filter: brightness(0) saturate(100%) invert(27%) sepia(98%) saturate(374%) hue-rotate(122deg) brightness(93%) contrast(85%);
 }
 
 .weather-temp {
@@ -1150,7 +1151,7 @@ body.dark .current-time {
 
 .weather-desc {
   font-size: 1.2rem;
-  color: #555;
+  color: var(--accent-foreground);
   text-transform: capitalize;
 }
 
@@ -1226,6 +1227,9 @@ body.dark .current-time {
 .hourly-icon img {
   width: 40px;
   height: 40px;
+  color: var(--primary);
+  filter: var(--primary);
+filter: brightness(0) saturate(100%) invert(27%) sepia(98%) saturate(374%) hue-rotate(122deg) brightness(93%) contrast(85%);
 }
 
 .hourly-temp {
@@ -1264,6 +1268,7 @@ body.dark .current-time {
 .daily-icon img {
   width: 30px;
   height: 30px;
+  filter: brightness(0) saturate(100%) invert(27%) sepia(98%) saturate(374%) hue-rotate(122deg) brightness(93%) contrast(85%);
 }
 
 .daily-temps {
@@ -1304,7 +1309,7 @@ body.dark .current-time {
 }
 
 .aqi-description {
-  color: #555;
+  color: var(--secondary-foreground);
 }
 
 .aqi-components {
@@ -1346,5 +1351,159 @@ body.dark .current-time {
   
   .aqi-components {
     grid-template-columns: 1fr;
+  }
+}
+
+
+
+/* Masjid Finder Specific Styles */
+.map-container {
+  margin-bottom: 2rem;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.masjid-list .list-container {
+  padding: 1.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.masjid-card {
+  background-color: var(--secondary);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  display: grid;
+  gap: 0.75rem;
+  position: relative;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.masjid-card h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.masjid-card .distance {
+  color: var(--primary);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.masjid-card .address {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+
+.masjid-card .features {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.masjid-card .feature-tag {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.masjid-card .actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.masjid-card .actions button {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: var(--radius);
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.masjid-card .actions button.primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.masjid-card .actions button.secondary {
+  background-color: var(--muted);
+  color: var(--muted-foreground);
+}
+
+.masjid-card .actions button:hover {
+  opacity: 0.9;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.feature-card {
+  background-color: var(--secondary);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.feature-card .feature-icon {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 1rem;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-card .feature-icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.feature-card h3 {
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+  color: var(--foreground);
+}
+
+.feature-card p {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .features-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .masjid-card .actions {
+    flex-direction: column;
   }
 }

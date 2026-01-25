@@ -452,13 +452,451 @@
 // });
 
 
+// document.addEventListener('DOMContentLoaded', () => {
+//     // DOM Elements
+//     const hamburger = document.querySelector('.hamburger');
+//     const sidebar = document.querySelector('.sidebar');
+//     const citySearch = document.getElementById('city-search');
+//     const searchBtn = document.getElementById('search-btn');
+//     const useCurrentLocationBtn = document.getElementById('use-current-location');
+//     const weatherCity = document.getElementById('weather-city');
+//     const lastUpdated = document.getElementById('last-updated');
+//     const weatherIcon = document.getElementById('weather-icon');
+//     const currentTemp = document.getElementById('current-temp');
+//     const weatherDesc = document.getElementById('weather-desc');
+//     const feelsLike = document.getElementById('feels-like');
+//     const humidity = document.getElementById('humidity');
+//     const wind = document.getElementById('wind');
+//     const pressure = document.getElementById('pressure');
+//     const hourlyContainer = document.getElementById('hourly-container');
+//     const dailyContainer = document.getElementById('daily-container');
+//     const airQualityContainer = document.getElementById('air-quality-container');
+//     const currentDate = document.getElementById('current-date');
+    
+//     // Chart instances
+//     let temperatureChart;
+//     let precipitationChart;
+
+//     // Hamburger menu toggle
+//     hamburger.addEventListener('click', () => {
+//         hamburger.classList.toggle('active');
+//         sidebar.classList.toggle('active');
+//     });
+
+//     // Close sidebar when clicking outside on mobile
+//     document.addEventListener('click', (e) => {
+//         if (window.innerWidth <= 768 && 
+//             !sidebar.contains(e.target) && 
+//             !hamburger.contains(e.target) && 
+//             sidebar.classList.contains('active')) {
+//             hamburger.classList.remove('active');
+//             sidebar.classList.remove('active');
+//         }
+//     });
+
+//     // Update current date
+//     function updateCurrentDate() {
+//         const now = new Date();
+//         currentDate.textContent = now.toLocaleDateString('en-US', {
+//             weekday: 'long',
+//             year: 'numeric',
+//             month: 'long',
+//             day: 'numeric'
+//         });
+//     }
+//     updateCurrentDate();
+
+//     // Initialize charts
+//     function initCharts() {
+//         const tempCtx = document.getElementById('temperature-chart').getContext('2d');
+//         const precipCtx = document.getElementById('precipitation-chart').getContext('2d');
+        
+//         temperatureChart = new Chart(tempCtx, {
+//             type: 'line',
+//             data: {
+//                 labels: [],
+//                 datasets: [
+//                     {
+//                         label: 'Temperature (°C)',
+//                         data: [],
+//                         borderColor: '#e63946',
+//                         backgroundColor: 'rgba(230, 57, 70, 0.1)',
+//                         tension: 0.3,
+//                         fill: true
+//                     },
+//                     {
+//                         label: 'Feels Like (°C)',
+//                         data: [],
+//                         borderColor: '#457b9d',
+//                         backgroundColor: 'rgba(69, 123, 157, 0.1)',
+//                         tension: 0.3,
+//                         fill: true
+//                     }
+//                 ]
+//             },
+//             options: {
+//                 responsive: true,
+//                 maintainAspectRatio: false,
+//                 plugins: { legend: { position: 'top' } },
+//                 scales: { y: { beginAtZero: false } }
+//             }
+//         });
+
+//         precipitationChart = new Chart(precipCtx, {
+//             type: 'bar',
+//             data: {
+//                 labels: [],
+//                 datasets: [
+//                     {
+//                         label: 'Precipitation (mm)',
+//                         data: [],
+//                         backgroundColor: '#1d3557',
+//                         borderColor: '#1d3557',
+//                         borderWidth: 1
+//                     },
+//                     {
+//                         label: 'Chance of Rain (%)',
+//                         data: [],
+//                         backgroundColor: '#a8dadc',
+//                         borderColor: '#a8dadc',
+//                         borderWidth: 1,
+//                         type: 'line',
+//                         yAxisID: 'y1'
+//                     }
+//                 ]
+//             },
+//             options: {
+//                 responsive: true,
+//                 maintainAspectRatio: false,
+//                 plugins: { legend: { position: 'top' } },
+//                 scales: {
+//                     y: {
+//                         beginAtZero: true,
+//                         title: { display: true, text: 'Precipitation (mm)' }
+//                     },
+//                     y1: {
+//                         position: 'right',
+//                         beginAtZero: true,
+//                         max: 100,
+//                         grid: { drawOnChartArea: false },
+//                         title: { display: true, text: 'Chance of Rain (%)' }
+//                     }
+//                 }
+//             }
+//         });
+//     }
+//     initCharts();
+
+//     // Main function to fetch all data for a given location
+//     async function fetchAndDisplayWeather(lat, lon, locationName = null) {
+//         try {
+//             // 1. Get Weather and Air Quality Data
+//             const weatherParams = 'current=temperature_2m,relativehumidity_2m,apparent_temperature,is_day,weathercode,surface_pressure,windspeed_10m&hourly=temperature_2m,apparent_temperature,precipitation_probability,precipitation,weathercode,is_day&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=auto';
+//             const weatherResponse = fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&${weatherParams}`);
+            
+//             const airQualityParams = 'current=us_aqi,pm2_5,pm10,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone';
+//             const airQualityResponse = fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&${airQualityParams}`);
+
+//             // 2. Get Location Name (if not provided)
+//             let locationResponse;
+//             if (!locationName) {
+//                 // Using Nominatim for reliable reverse geocoding
+//                 locationResponse = fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`, {
+//                     headers: { 'User-Agent': 'PrayTime-Weather-App' } // Nominatim requires a User-Agent
+//                 });
+//             }
+
+//             // 3. Await all promises
+//             const [weatherRes, airQualityRes, locRes] = await Promise.all([weatherResponse, airQualityResponse, locationResponse]);
+
+//             if (!weatherRes.ok || !airQualityRes.ok) {
+//                 throw new Error('Failed to fetch weather or air quality data.');
+//             }
+
+//             const weatherData = await weatherRes.json();
+//             const airQualityData = await airQualityRes.json();
+//             let finalLocation;
+
+//             if (locationName) {
+//                 finalLocation = locationName;
+//             } else {
+//                 if (!locRes.ok) throw new Error('Failed to fetch location name.');
+//                 const geocodeData = await locRes.json();
+//                 finalLocation = {
+//                     name: geocodeData.address.city || geocodeData.address.town || geocodeData.address.village || 'Unknown Location',
+//                     country: geocodeData.address.country
+//                 };
+//             }
+
+//             // 4. Update UI with all the data
+//             updateWeatherUI({
+//                 weather: weatherData,
+//                 airQuality: airQualityData,
+//                 location: finalLocation
+//             });
+
+//         } catch (error) {
+//             console.error('Error fetching weather data:', error);
+//             alert('Could not fetch weather data. The service might be temporarily down or the location is invalid. Please try again later.');
+//             return null;
+//         }
+//     }
+
+//     // Update weather UI
+//     function updateWeatherUI(data) {
+//         const { weather, airQuality, location } = data;
+//         const current = weather.current;
+//         const hourly = weather.hourly;
+//         const daily = weather.daily;
+
+//         // Update current weather
+//         weatherCity.textContent = `${location.name}, ${location.country}`;
+//         lastUpdated.textContent = `Updated: ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+        
+//         const { description, iconPath } = getWeatherIcon(current.weathercode, current.is_day);
+//         weatherIcon.innerHTML = `<img src="${iconPath}" alt="${description}">`;
+        
+//         currentTemp.textContent = `${Math.round(current.temperature_2m)}°C`;
+//         weatherDesc.textContent = description;
+//         feelsLike.textContent = `Feels like: ${Math.round(current.apparent_temperature)}°C`;
+//         humidity.textContent = `Humidity: ${current.relativehumidity_2m}%`;
+//         wind.textContent = `Wind: ${Math.round(current.windspeed_10m)} km/h`;
+//         pressure.textContent = `Pressure: ${Math.round(current.surface_pressure)} hPa`;
+        
+//         // Update hourly forecast
+//         hourlyContainer.innerHTML = '';
+//         const currentHour = new Date().getHours();
+//         for (let i = 0; i < 24; i++) {
+//             const hourTime = new Date(hourly.time[i]);
+//             const hour = hourTime.getHours();
+//             // Using is_day from the API for accuracy
+//             const { description: hourDesc, iconPath: hourIcon } = getWeatherIcon(hourly.weathercode[i], hourly.is_day[i]);
+
+//             const hourItem = document.createElement('div');
+//             hourItem.className = 'hourly-item';
+//             if (hour === currentHour) hourItem.classList.add('active');
+            
+//             hourItem.innerHTML = `
+//                 <div class="hourly-time">${hour}:00</div>
+//                 <div class="hourly-icon"><img src="${hourIcon}" alt="${hourDesc}"></div>
+//                 <div class="hourly-temp">${Math.round(hourly.temperature_2m[i])}°</div>
+//             `;
+//             hourlyContainer.appendChild(hourItem);
+//         }
+        
+//         // Update daily forecast
+//         dailyContainer.innerHTML = '';
+//         const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+//         daily.time.forEach((day, index) => {
+//             const dayDate = new Date(day);
+//             const dayName = index === 0 ? 'Today' : days[dayDate.getUTCDay()];
+//             const { description: dayDesc, iconPath: dayIcon } = getWeatherIcon(daily.weathercode[index], true); // Daily is always 'day' icon
+
+//             const dayItem = document.createElement('div');
+//             dayItem.className = 'daily-item';
+            
+//             dayItem.innerHTML = `
+//                 <div class="daily-day">${dayName}</div>
+//                 <div class="daily-icon"><img src="${dayIcon}" alt="${dayDesc}"></div>
+//                 <div class="daily-temps">
+//                     <span class="daily-high">${Math.round(daily.temperature_2m_max[index])}°</span>
+//                     <span class="daily-low">${Math.round(daily.temperature_2m_min[index])}°</span>
+//                 </div>
+//             `;
+//             dailyContainer.appendChild(dayItem);
+//         });
+        
+//         updateCharts(hourly);
+//         updateAirQuality(airQuality.current);
+//     }
+    
+//     // Update charts with hourly data
+//     function updateCharts(hourlyData) {
+//         const hours = hourlyData.time.slice(0, 24).map(t => new Date(t).getHours() + ':00');
+//         const temps = hourlyData.temperature_2m.slice(0, 24).map(Math.round);
+//         const feelsLikeTemps = hourlyData.apparent_temperature.slice(0, 24).map(Math.round);
+//         const precip = hourlyData.precipitation.slice(0, 24);
+//         const pop = hourlyData.precipitation_probability.slice(0, 24);
+
+//         temperatureChart.data.labels = hours;
+//         temperatureChart.data.datasets[0].data = temps;
+//         temperatureChart.data.datasets[1].data = feelsLikeTemps;
+//         temperatureChart.update();
+        
+//         precipitationChart.data.labels = hours;
+//         precipitationChart.data.datasets[0].data = precip;
+//         precipitationChart.data.datasets[1].data = pop;
+//         precipitationChart.update();
+//     }
+    
+//     // Update air quality
+//     function updateAirQuality(airQualityData) {
+//         if (!airQualityData || airQualityData.us_aqi === null) {
+//             airQualityContainer.innerHTML = '<p>Air quality data not available for this location.</p>';
+//             return;
+//         }
+        
+//         const aqi = Math.round(airQualityData.us_aqi);
+//         const { pm2_5, pm10, nitrogen_dioxide, sulphur_dioxide, ozone, carbon_monoxide } = airQualityData;
+        
+//         let aqiLevel, aqiDescription;
+//         if (aqi <= 50) { aqiLevel = 'Good'; aqiDescription = 'Air quality is satisfactory, and air pollution poses little or no risk.'; } 
+//         else if (aqi <= 100) { aqiLevel = 'Moderate'; aqiDescription = 'Air quality is acceptable. However, there may be a risk for some people.'; } 
+//         else if (aqi <= 150) { aqiLevel = 'Unhealthy for Sensitive Groups'; aqiDescription = 'Members of sensitive groups may experience health effects.'; }
+//         else if (aqi <= 200) { aqiLevel = 'Unhealthy'; aqiDescription = 'Some members of the general public may experience health effects.'; }
+//         else if (aqi <= 300) { aqiLevel = 'Very Unhealthy'; aqiDescription = 'Health alert: The risk of health effects is increased for everyone.'; }
+//         else { aqiLevel = 'Hazardous'; aqiDescription = 'Health warning of emergency conditions: everyone is more likely to be affected.'; }
+        
+//         airQualityContainer.innerHTML = `
+//             <div class="aqi-value" style="color: ${aqi <= 50 ? '#28a745' : aqi <= 100 ? '#ffc107' : '#dc3545'};">${aqi}</div>
+//             <div class="aqi-level">${aqiLevel}</div>
+//             <div class="aqi-description">${aqiDescription}</div>
+//             <div class="aqi-components">
+//                 ${pm2_5 ? `<div class="aqi-component"><span class="aqi-component-name">PM2.5</span><span class="aqi-component-value">${pm2_5.toFixed(1)} µg/m³</span></div>` : ''}
+//                 ${pm10 ? `<div class="aqi-component"><span class="aqi-component-name">PM10</span><span class="aqi-component-value">${pm10.toFixed(1)} µg/m³</span></div>` : ''}
+//                 ${nitrogen_dioxide ? `<div class="aqi-component"><span class="aqi-component-name">NO₂</span><span class="aqi-component-value">${nitrogen_dioxide.toFixed(1)} µg/m³</span></div>` : ''}
+//                 ${sulphur_dioxide ? `<div class="aqi-component"><span class="aqi-component-name">SO₂</span><span class="aqi-component-value">${sulphur_dioxide.toFixed(1)} µg/m³</span></div>` : ''}
+//                 ${ozone ? `<div class="aqi-component"><span class="aqi-component-name">O₃</span><span class="aqi-component-value">${ozone.toFixed(1)} µg/m³</span></div>` : ''}
+//                 ${carbon_monoxide ? `<div class="aqi-component"><span class="aqi-component-name">CO</span><span class="aqi-component-value">${carbon_monoxide.toFixed(1)} µg/m³</span></div>` : ''}
+//             </div>
+//         `;
+//     }
+    
+//     // Get weather icon and description from WMO code
+//     function getWeatherIcon(code, isDay) {
+//         // const prefix = 'https://cdn.jsdelivr.net/gh/erikflowers/weather-icons@d558c1b/svg/';
+//         // AFTER
+// const prefix = 'svg/';
+//         let iconName, description;
+        
+//         switch (code) {
+//             case 0: description = 'Clear sky'; iconName = isDay ? 'wi-day-sunny.svg' : 'wi-night-clear.svg'; break;
+//             case 1: description = 'Mainly clear'; iconName = isDay ? 'wi-day-sunny-overcast.svg' : 'wi-night-alt-partly-cloudy.svg'; break;
+//             case 2: description = 'Partly cloudy'; iconName = isDay ? 'wi-day-cloudy.svg' : 'wi-night-alt-cloudy.svg'; break;
+//             case 3: description = 'Overcast'; iconName = 'wi-cloudy.svg'; break;
+//             case 45: case 48: description = 'Fog'; iconName = 'wi-fog.svg'; break;
+//             case 51: case 53: case 55: description = 'Drizzle'; iconName = 'wi-sprinkle.svg'; break;
+//             case 56: case 57: description = 'Freezing Drizzle'; iconName = 'wi-rain-mix.svg'; break;
+//             case 61: case 63: case 65: description = 'Rain'; iconName = 'wi-rain.svg'; break;
+//             case 66: case 67: description = 'Freezing Rain'; iconName = 'wi-sleet.svg'; break;
+//             case 71: case 73: case 75: description = 'Snow fall'; iconName = 'wi-snow.svg'; break;
+//             case 77: description = 'Snow grains'; iconName = 'wi-snow.svg'; break;
+//             case 80: case 81: case 82: description = 'Rain showers'; iconName = 'wi-showers.svg'; break;
+//             case 85: case 86: description = 'Snow showers'; iconName = 'wi-snow.svg'; break;
+//             case 95: description = 'Thunderstorm'; iconName = 'wi-thunderstorm.svg'; break;
+//             case 96: case 99: description = 'Thunderstorm with hail'; iconName = 'wi-storm-showers.svg'; break;
+//             default: description = 'Unknown'; iconName = 'wi-na.svg'; break;
+//         }
+//         return { description, iconPath: prefix + iconName };
+//     }
+    
+//     // Search for city weather
+//     async function searchCityWeather(cityName) {
+//         try {
+//             // Using Open-Meteo's reliable geocoding API
+//             const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1&language=en&format=json`);
+//             const data = await response.json();
+            
+//             if (data.results && data.results.length > 0) {
+//                 const city = data.results[0];
+//                 const locationName = { name: city.name, country: city.country };
+//                 fetchAndDisplayWeather(city.latitude, city.longitude, locationName);
+//             } else {
+//                 alert('City not found. Please try another location.');
+//             }
+//         } catch (error) {
+//             console.error('Error searching for city:', error);
+//             alert('Error fetching city data. Please try again.');
+//         }
+//     }
+    
+//     // Event listeners
+//     searchBtn.addEventListener('click', () => {
+//         if (citySearch.value.trim()) {
+//             searchCityWeather(citySearch.value.trim());
+//         }
+//     });
+    
+//     citySearch.addEventListener('keypress', (e) => {
+//         if (e.key === 'Enter' && citySearch.value.trim()) {
+//             searchCityWeather(citySearch.value.trim());
+//         }
+//     });
+    
+//     useCurrentLocationBtn.addEventListener('click', () => {
+//         if (navigator.geolocation) {
+//             navigator.geolocation.getCurrentPosition(
+//                 (position) => fetchAndDisplayWeather(position.coords.latitude, position.coords.longitude),
+//                 (error) => alert('Unable to retrieve your location. Please enable location services or search for a city manually.')
+//             );
+//         } else {
+//             alert('Geolocation is not supported by your browser. Please search for a city manually.');
+//         }
+//     });
+    
+//     // Initial load: Try to use current location, fall back to a default (Cairo)
+//     function initializeWeather() {
+//         if (navigator.geolocation) {
+//             navigator.geolocation.getCurrentPosition(
+//                 (position) => fetchAndDisplayWeather(position.coords.latitude, position.coords.longitude),
+//                 (error) => {
+//                     console.log("User denied geolocation or it failed. Loading default location.");
+//                     fetchAndDisplayWeather(30.0444, 31.2357, { name: 'Cairo', country: 'Egypt' }); // Default to Cairo
+//                 }
+//             );
+//         } else {
+//             console.log("Geolocation not supported. Loading default location.");
+//             fetchAndDisplayWeather(30.0444, 31.2357, { name: 'Cairo', country: 'Egypt' }); // Default to Cairo
+//         }
+//     }
+    
+//     initializeWeather();
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
-    // DOM Elements
+    // --- DOM Elements ---
     const hamburger = document.querySelector('.hamburger');
     const sidebar = document.querySelector('.sidebar');
+    
+    // Search Elements
     const citySearch = document.getElementById('city-search');
     const searchBtn = document.getElementById('search-btn');
+    const searchResults = document.getElementById('search-results');
     const useCurrentLocationBtn = document.getElementById('use-current-location');
+    
+    // Weather Display Elements
     const weatherCity = document.getElementById('weather-city');
     const lastUpdated = document.getElementById('last-updated');
     const weatherIcon = document.getElementById('weather-icon');
@@ -468,33 +906,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const humidity = document.getElementById('humidity');
     const wind = document.getElementById('wind');
     const pressure = document.getElementById('pressure');
+    
+    // Containers
     const hourlyContainer = document.getElementById('hourly-container');
     const dailyContainer = document.getElementById('daily-container');
     const airQualityContainer = document.getElementById('air-quality-container');
     const currentDate = document.getElementById('current-date');
     
-    // Chart instances
+    // Variables
     let temperatureChart;
     let precipitationChart;
+    let searchTimeout; // For debouncing
 
-    // Hamburger menu toggle
-    hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        sidebar.classList.toggle('active');
-    });
+    // --- Sidebar Logic ---
+    if (hamburger && sidebar) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            sidebar.classList.toggle('active');
+        });
 
-    // Close sidebar when clicking outside on mobile
-    document.addEventListener('click', (e) => {
-        if (window.innerWidth <= 768 && 
-            !sidebar.contains(e.target) && 
-            !hamburger.contains(e.target) && 
-            sidebar.classList.contains('active')) {
-            hamburger.classList.remove('active');
-            sidebar.classList.remove('active');
-        }
-    });
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(e.target) && 
+                !hamburger.contains(e.target) && 
+                sidebar.classList.contains('active')) {
+                hamburger.classList.remove('active');
+                sidebar.classList.remove('active');
+            }
+            
+            // Close search results if clicking outside
+            if (!citySearch.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.classList.remove('has-results');
+            }
+        });
+    }
 
-    // Update current date
+    // --- Date Display ---
     function updateCurrentDate() {
         const now = new Date();
         currentDate.textContent = now.toLocaleDateString('en-US', {
@@ -506,11 +953,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     updateCurrentDate();
 
-    // Initialize charts
+    // --- Chart Initialization ---
     function initCharts() {
         const tempCtx = document.getElementById('temperature-chart').getContext('2d');
         const precipCtx = document.getElementById('precipitation-chart').getContext('2d');
         
+        // Define common chart options
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'top' } },
+            scales: { y: { beginAtZero: false } }
+        };
+
         temperatureChart = new Chart(tempCtx, {
             type: 'line',
             data: {
@@ -534,12 +989,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 ]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { position: 'top' } },
-                scales: { y: { beginAtZero: false } }
-            }
+            options: commonOptions
         });
 
         precipitationChart = new Chart(precipCtx, {
@@ -566,9 +1016,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { position: 'top' } },
+                ...commonOptions,
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -587,48 +1035,132 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     initCharts();
 
-    // Main function to fetch all data for a given location
-    async function fetchAndDisplayWeather(lat, lon, locationName = null) {
+    // --- Search & Suggestions Logic (New) ---
+
+    // Input Event: Fetch Suggestions
+    citySearch.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        const query = e.target.value.trim();
+
+        if (query.length < 3) {
+            searchResults.classList.remove('has-results');
+            searchResults.innerHTML = '';
+            return;
+        }
+
+        searchTimeout = setTimeout(() => {
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+                .then(res => res.json())
+                .then(data => {
+                    searchResults.innerHTML = '';
+                    if (data.length > 0) {
+                        searchResults.classList.add('has-results');
+                        data.forEach(place => {
+                            const li = document.createElement('li');
+                            // Format name neatly
+                            const displayName = place.display_name.split(',').slice(0, 3).join(',');
+                            li.textContent = displayName;
+                            
+                            li.addEventListener('click', () => {
+                                // Update Input
+                                const shortName = place.display_name.split(',')[0];
+                                citySearch.value = shortName;
+                                
+                                // Hide List
+                                searchResults.classList.remove('has-results');
+                                
+                                // Fetch Weather
+                                fetchAndDisplayWeather(place.lat, place.lon, {
+                                    name: shortName,
+                                    country: getCountryFromDisplayName(place.display_name)
+                                });
+                            });
+                            searchResults.appendChild(li);
+                        });
+                    } else {
+                        searchResults.classList.remove('has-results');
+                    }
+                })
+                .catch(err => console.error("Search error:", err));
+        }, 500); // 500ms delay
+    });
+
+    // Helper to extract country roughly
+    function getCountryFromDisplayName(displayName) {
+        const parts = displayName.split(',');
+        return parts[parts.length - 1].trim();
+    }
+
+    // Manual Search Button Click
+    searchBtn.addEventListener('click', () => {
+        if (citySearch.value.trim()) {
+            // Fallback to direct search if they ignore suggestions and click button
+            performDirectSearch(citySearch.value.trim());
+        }
+    });
+
+    citySearch.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && citySearch.value.trim()) {
+            searchResults.classList.remove('has-results');
+            performDirectSearch(citySearch.value.trim());
+        }
+    });
+
+    async function performDirectSearch(cityName) {
+         try {
+            const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1&language=en&format=json`);
+            const data = await response.json();
+            
+            if (data.results && data.results.length > 0) {
+                const city = data.results[0];
+                fetchAndDisplayWeather(city.latitude, city.longitude, { name: city.name, country: city.country });
+            } else {
+                alert('City not found. Please try selecting from the suggestions.');
+            }
+        } catch (error) {
+            console.error('Error searching:', error);
+        }
+    }
+
+
+    // --- Weather Data Fetching ---
+
+    async function fetchAndDisplayWeather(lat, lon, locationInfo = null) {
+        // Show loading state if needed
+        weatherCity.textContent = "Loading...";
+        
         try {
-            // 1. Get Weather and Air Quality Data
+            // 1. Fetch Weather & Air Quality
             const weatherParams = 'current=temperature_2m,relativehumidity_2m,apparent_temperature,is_day,weathercode,surface_pressure,windspeed_10m&hourly=temperature_2m,apparent_temperature,precipitation_probability,precipitation,weathercode,is_day&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=auto';
             const weatherResponse = fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&${weatherParams}`);
             
             const airQualityParams = 'current=us_aqi,pm2_5,pm10,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone';
             const airQualityResponse = fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&${airQualityParams}`);
 
-            // 2. Get Location Name (if not provided)
-            let locationResponse;
-            if (!locationName) {
-                // Using Nominatim for reliable reverse geocoding
-                locationResponse = fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`, {
-                    headers: { 'User-Agent': 'PrayTime-Weather-App' } // Nominatim requires a User-Agent
-                });
+            // 2. Fetch Location Name (if missing)
+            let locationResponsePromise = Promise.resolve(null);
+            if (!locationInfo) {
+                locationResponsePromise = fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10`);
             }
 
-            // 3. Await all promises
-            const [weatherRes, airQualityRes, locRes] = await Promise.all([weatherResponse, airQualityResponse, locationResponse]);
+            // 3. Wait for all
+            const [weatherRes, airQualityRes, locRes] = await Promise.all([weatherResponse, airQualityResponse, locationResponsePromise]);
 
-            if (!weatherRes.ok || !airQualityRes.ok) {
-                throw new Error('Failed to fetch weather or air quality data.');
-            }
+            if (!weatherRes.ok || !airQualityRes.ok) throw new Error('API Error');
 
             const weatherData = await weatherRes.json();
             const airQualityData = await airQualityRes.json();
-            let finalLocation;
-
-            if (locationName) {
-                finalLocation = locationName;
-            } else {
-                if (!locRes.ok) throw new Error('Failed to fetch location name.');
-                const geocodeData = await locRes.json();
+            
+            let finalLocation = locationInfo;
+            if (!finalLocation && locRes) {
+                const locData = await locRes.json();
                 finalLocation = {
-                    name: geocodeData.address.city || geocodeData.address.town || geocodeData.address.village || 'Unknown Location',
-                    country: geocodeData.address.country
+                    name: locData.address.city || locData.address.town || locData.address.village || 'Unknown',
+                    country: locData.address.country || ''
                 };
             }
 
-            // 4. Update UI with all the data
+            // 4. Update UI
             updateWeatherUI({
                 weather: weatherData,
                 airQuality: airQualityData,
@@ -636,23 +1168,24 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
         } catch (error) {
-            console.error('Error fetching weather data:', error);
-            alert('Could not fetch weather data. The service might be temporarily down or the location is invalid. Please try again later.');
-            return null;
+            console.error('Fetch error:', error);
+            weatherCity.textContent = "Error loading data";
         }
     }
 
-    // Update weather UI
+    // --- UI Update Functions ---
+
     function updateWeatherUI(data) {
         const { weather, airQuality, location } = data;
         const current = weather.current;
         const hourly = weather.hourly;
         const daily = weather.daily;
 
-        // Update current weather
+        // Header Info
         weatherCity.textContent = `${location.name}, ${location.country}`;
         lastUpdated.textContent = `Updated: ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
         
+        // Current Weather Status
         const { description, iconPath } = getWeatherIcon(current.weathercode, current.is_day);
         weatherIcon.innerHTML = `<img src="${iconPath}" alt="${description}">`;
         
@@ -663,192 +1196,158 @@ document.addEventListener('DOMContentLoaded', () => {
         wind.textContent = `Wind: ${Math.round(current.windspeed_10m)} km/h`;
         pressure.textContent = `Pressure: ${Math.round(current.surface_pressure)} hPa`;
         
-        // Update hourly forecast
+        // Hourly Forecast
         hourlyContainer.innerHTML = '';
         const currentHour = new Date().getHours();
+        
+        // Only show next 24 hours
         for (let i = 0; i < 24; i++) {
-            const hourTime = new Date(hourly.time[i]);
-            const hour = hourTime.getHours();
-            // Using is_day from the API for accuracy
-            const { description: hourDesc, iconPath: hourIcon } = getWeatherIcon(hourly.weathercode[i], hourly.is_day[i]);
+            const timeStr = hourly.time[i];
+            const dateObj = new Date(timeStr);
+            const hour = dateObj.getHours();
+            const { description: hDesc, iconPath: hIcon } = getWeatherIcon(hourly.weathercode[i], hourly.is_day[i]);
 
-            const hourItem = document.createElement('div');
-            hourItem.className = 'hourly-item';
-            if (hour === currentHour) hourItem.classList.add('active');
+            const div = document.createElement('div');
+            div.className = 'hourly-item';
+            if (hour === currentHour) div.classList.add('active');
             
-            hourItem.innerHTML = `
+            div.innerHTML = `
                 <div class="hourly-time">${hour}:00</div>
-                <div class="hourly-icon"><img src="${hourIcon}" alt="${hourDesc}"></div>
+                <div class="hourly-icon"><img src="${hIcon}" alt="${hDesc}"></div>
                 <div class="hourly-temp">${Math.round(hourly.temperature_2m[i])}°</div>
             `;
-            hourlyContainer.appendChild(hourItem);
+            hourlyContainer.appendChild(div);
         }
         
-        // Update daily forecast
+        // Daily Forecast
         dailyContainer.innerHTML = '';
-        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        daily.time.forEach((day, index) => {
-            const dayDate = new Date(day);
-            const dayName = index === 0 ? 'Today' : days[dayDate.getUTCDay()];
-            const { description: dayDesc, iconPath: dayIcon } = getWeatherIcon(daily.weathercode[index], true); // Daily is always 'day' icon
+        const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        
+        daily.time.forEach((t, i) => {
+            const d = new Date(t);
+            const dayName = i === 0 ? 'Today' : dayNames[d.getUTCDay()]; // Use UTC to avoid timezone shift issues on daily dates
+            const { description: dDesc, iconPath: dIcon } = getWeatherIcon(daily.weathercode[i], 1); // Always day icon
 
-            const dayItem = document.createElement('div');
-            dayItem.className = 'daily-item';
-            
-            dayItem.innerHTML = `
+            const div = document.createElement('div');
+            div.className = 'daily-item';
+            div.innerHTML = `
                 <div class="daily-day">${dayName}</div>
-                <div class="daily-icon"><img src="${dayIcon}" alt="${dayDesc}"></div>
+                <div class="daily-icon"><img src="${dIcon}" alt="${dDesc}"></div>
                 <div class="daily-temps">
-                    <span class="daily-high">${Math.round(daily.temperature_2m_max[index])}°</span>
-                    <span class="daily-low">${Math.round(daily.temperature_2m_min[index])}°</span>
+                    <span class="daily-high">${Math.round(daily.temperature_2m_max[i])}°</span>
+                    <span class="daily-low">${Math.round(daily.temperature_2m_min[i])}°</span>
                 </div>
             `;
-            dailyContainer.appendChild(dayItem);
+            dailyContainer.appendChild(div);
         });
         
         updateCharts(hourly);
         updateAirQuality(airQuality.current);
     }
-    
-    // Update charts with hourly data
-    function updateCharts(hourlyData) {
-        const hours = hourlyData.time.slice(0, 24).map(t => new Date(t).getHours() + ':00');
-        const temps = hourlyData.temperature_2m.slice(0, 24).map(Math.round);
-        const feelsLikeTemps = hourlyData.apparent_temperature.slice(0, 24).map(Math.round);
-        const precip = hourlyData.precipitation.slice(0, 24);
-        const pop = hourlyData.precipitation_probability.slice(0, 24);
 
-        temperatureChart.data.labels = hours;
-        temperatureChart.data.datasets[0].data = temps;
-        temperatureChart.data.datasets[1].data = feelsLikeTemps;
+    function updateCharts(hourly) {
+        const labels = hourly.time.slice(0, 24).map(t => new Date(t).getHours() + ':00');
+        
+        // Update Temperature Chart
+        temperatureChart.data.labels = labels;
+        temperatureChart.data.datasets[0].data = hourly.temperature_2m.slice(0, 24);
+        temperatureChart.data.datasets[1].data = hourly.apparent_temperature.slice(0, 24);
         temperatureChart.update();
         
-        precipitationChart.data.labels = hours;
-        precipitationChart.data.datasets[0].data = precip;
-        precipitationChart.data.datasets[1].data = pop;
+        // Update Precip Chart
+        precipitationChart.data.labels = labels;
+        precipitationChart.data.datasets[0].data = hourly.precipitation.slice(0, 24);
+        precipitationChart.data.datasets[1].data = hourly.precipitation_probability.slice(0, 24);
         precipitationChart.update();
     }
-    
-    // Update air quality
-    function updateAirQuality(airQualityData) {
-        if (!airQualityData || airQualityData.us_aqi === null) {
-            airQualityContainer.innerHTML = '<p>Air quality data not available for this location.</p>';
+
+    function updateAirQuality(aqData) {
+        if (!aqData || aqData.us_aqi === null) {
+            airQualityContainer.innerHTML = '<p>Air quality data unavailable.</p>';
             return;
         }
-        
-        const aqi = Math.round(airQualityData.us_aqi);
-        const { pm2_5, pm10, nitrogen_dioxide, sulphur_dioxide, ozone, carbon_monoxide } = airQualityData;
-        
-        let aqiLevel, aqiDescription;
-        if (aqi <= 50) { aqiLevel = 'Good'; aqiDescription = 'Air quality is satisfactory, and air pollution poses little or no risk.'; } 
-        else if (aqi <= 100) { aqiLevel = 'Moderate'; aqiDescription = 'Air quality is acceptable. However, there may be a risk for some people.'; } 
-        else if (aqi <= 150) { aqiLevel = 'Unhealthy for Sensitive Groups'; aqiDescription = 'Members of sensitive groups may experience health effects.'; }
-        else if (aqi <= 200) { aqiLevel = 'Unhealthy'; aqiDescription = 'Some members of the general public may experience health effects.'; }
-        else if (aqi <= 300) { aqiLevel = 'Very Unhealthy'; aqiDescription = 'Health alert: The risk of health effects is increased for everyone.'; }
-        else { aqiLevel = 'Hazardous'; aqiDescription = 'Health warning of emergency conditions: everyone is more likely to be affected.'; }
-        
+
+        const aqi = Math.round(aqData.us_aqi);
+        let level = 'Good', color = '#28a745', desc = 'Air quality is satisfactory.';
+
+        if (aqi > 50) { level = 'Moderate'; color = '#ffc107'; desc = 'Acceptable quality.'; }
+        if (aqi > 100) { level = 'Unhealthy for Sensitive Groups'; color = '#fd7e14'; desc = 'Sensitive groups may suffer.'; }
+        if (aqi > 150) { level = 'Unhealthy'; color = '#dc3545'; desc = 'General public may suffer.'; }
+        if (aqi > 200) { level = 'Very Unhealthy'; color = '#6f42c1'; desc = 'Health alert.'; }
+        if (aqi > 300) { level = 'Hazardous'; color = '#343a40'; desc = 'Emergency conditions.'; }
+
         airQualityContainer.innerHTML = `
-            <div class="aqi-value" style="color: ${aqi <= 50 ? '#28a745' : aqi <= 100 ? '#ffc107' : '#dc3545'};">${aqi}</div>
-            <div class="aqi-level">${aqiLevel}</div>
-            <div class="aqi-description">${aqiDescription}</div>
+            <div class="aqi-value" style="color: ${color}">${aqi}</div>
+            <div class="aqi-level">${level}</div>
+            <div class="aqi-description">${desc}</div>
             <div class="aqi-components">
-                ${pm2_5 ? `<div class="aqi-component"><span class="aqi-component-name">PM2.5</span><span class="aqi-component-value">${pm2_5.toFixed(1)} µg/m³</span></div>` : ''}
-                ${pm10 ? `<div class="aqi-component"><span class="aqi-component-name">PM10</span><span class="aqi-component-value">${pm10.toFixed(1)} µg/m³</span></div>` : ''}
-                ${nitrogen_dioxide ? `<div class="aqi-component"><span class="aqi-component-name">NO₂</span><span class="aqi-component-value">${nitrogen_dioxide.toFixed(1)} µg/m³</span></div>` : ''}
-                ${sulphur_dioxide ? `<div class="aqi-component"><span class="aqi-component-name">SO₂</span><span class="aqi-component-value">${sulphur_dioxide.toFixed(1)} µg/m³</span></div>` : ''}
-                ${ozone ? `<div class="aqi-component"><span class="aqi-component-name">O₃</span><span class="aqi-component-value">${ozone.toFixed(1)} µg/m³</span></div>` : ''}
-                ${carbon_monoxide ? `<div class="aqi-component"><span class="aqi-component-name">CO</span><span class="aqi-component-value">${carbon_monoxide.toFixed(1)} µg/m³</span></div>` : ''}
+                ${renderAQComponent('PM2.5', aqData.pm2_5)}
+                ${renderAQComponent('PM10', aqData.pm10)}
+                ${renderAQComponent('NO₂', aqData.nitrogen_dioxide)}
+                ${renderAQComponent('O₃', aqData.ozone)}
             </div>
         `;
     }
-    
-    // Get weather icon and description from WMO code
+
+    function renderAQComponent(name, value) {
+        if (value === null || value === undefined) return '';
+        return `<div class="aqi-component">
+                    <span class="aqi-component-name">${name}</span>
+                    <span class="aqi-component-value">${value.toFixed(1)}</span>
+                </div>`;
+    }
+
+    // Weather Codes (WMO)
     function getWeatherIcon(code, isDay) {
-        // const prefix = 'https://cdn.jsdelivr.net/gh/erikflowers/weather-icons@d558c1b/svg/';
-        // AFTER
-const prefix = 'svg/';
-        let iconName, description;
-        
+        const prefix = 'svg/'; // Ensure this path matches your folder structure
+        let desc = 'Unknown', icon = 'wi-na.svg';
+
         switch (code) {
-            case 0: description = 'Clear sky'; iconName = isDay ? 'wi-day-sunny.svg' : 'wi-night-clear.svg'; break;
-            case 1: description = 'Mainly clear'; iconName = isDay ? 'wi-day-sunny-overcast.svg' : 'wi-night-alt-partly-cloudy.svg'; break;
-            case 2: description = 'Partly cloudy'; iconName = isDay ? 'wi-day-cloudy.svg' : 'wi-night-alt-cloudy.svg'; break;
-            case 3: description = 'Overcast'; iconName = 'wi-cloudy.svg'; break;
-            case 45: case 48: description = 'Fog'; iconName = 'wi-fog.svg'; break;
-            case 51: case 53: case 55: description = 'Drizzle'; iconName = 'wi-sprinkle.svg'; break;
-            case 56: case 57: description = 'Freezing Drizzle'; iconName = 'wi-rain-mix.svg'; break;
-            case 61: case 63: case 65: description = 'Rain'; iconName = 'wi-rain.svg'; break;
-            case 66: case 67: description = 'Freezing Rain'; iconName = 'wi-sleet.svg'; break;
-            case 71: case 73: case 75: description = 'Snow fall'; iconName = 'wi-snow.svg'; break;
-            case 77: description = 'Snow grains'; iconName = 'wi-snow.svg'; break;
-            case 80: case 81: case 82: description = 'Rain showers'; iconName = 'wi-showers.svg'; break;
-            case 85: case 86: description = 'Snow showers'; iconName = 'wi-snow.svg'; break;
-            case 95: description = 'Thunderstorm'; iconName = 'wi-thunderstorm.svg'; break;
-            case 96: case 99: description = 'Thunderstorm with hail'; iconName = 'wi-storm-showers.svg'; break;
-            default: description = 'Unknown'; iconName = 'wi-na.svg'; break;
+            case 0: desc = 'Clear sky'; icon = isDay ? 'wi-day-sunny.svg' : 'wi-night-clear.svg'; break;
+            case 1: desc = 'Mainly clear'; icon = isDay ? 'wi-day-sunny-overcast.svg' : 'wi-night-alt-partly-cloudy.svg'; break;
+            case 2: desc = 'Partly cloudy'; icon = isDay ? 'wi-day-cloudy.svg' : 'wi-night-alt-cloudy.svg'; break;
+            case 3: desc = 'Overcast'; icon = 'wi-cloudy.svg'; break;
+            case 45: case 48: desc = 'Fog'; icon = 'wi-fog.svg'; break;
+            case 51: case 53: case 55: desc = 'Drizzle'; icon = 'wi-sprinkle.svg'; break;
+            case 61: case 63: case 65: desc = 'Rain'; icon = 'wi-rain.svg'; break;
+            case 71: case 73: case 75: desc = 'Snow'; icon = 'wi-snow.svg'; break;
+            case 95: case 96: case 99: desc = 'Thunderstorm'; icon = 'wi-thunderstorm.svg'; break;
         }
-        return { description, iconPath: prefix + iconName };
+        return { description: desc, iconPath: prefix + icon };
     }
-    
-    // Search for city weather
-    async function searchCityWeather(cityName) {
-        try {
-            // Using Open-Meteo's reliable geocoding API
-            const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityName)}&count=1&language=en&format=json`);
-            const data = await response.json();
-            
-            if (data.results && data.results.length > 0) {
-                const city = data.results[0];
-                const locationName = { name: city.name, country: city.country };
-                fetchAndDisplayWeather(city.latitude, city.longitude, locationName);
-            } else {
-                alert('City not found. Please try another location.');
-            }
-        } catch (error) {
-            console.error('Error searching for city:', error);
-            alert('Error fetching city data. Please try again.');
-        }
-    }
-    
-    // Event listeners
-    searchBtn.addEventListener('click', () => {
-        if (citySearch.value.trim()) {
-            searchCityWeather(citySearch.value.trim());
-        }
-    });
-    
-    citySearch.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && citySearch.value.trim()) {
-            searchCityWeather(citySearch.value.trim());
-        }
-    });
-    
+
+    // --- Geolocation & Init ---
+
     useCurrentLocationBtn.addEventListener('click', () => {
         if (navigator.geolocation) {
+            weatherCity.textContent = "Locating...";
             navigator.geolocation.getCurrentPosition(
-                (position) => fetchAndDisplayWeather(position.coords.latitude, position.coords.longitude),
-                (error) => alert('Unable to retrieve your location. Please enable location services or search for a city manually.')
-            );
-        } else {
-            alert('Geolocation is not supported by your browser. Please search for a city manually.');
-        }
-    });
-    
-    // Initial load: Try to use current location, fall back to a default (Cairo)
-    function initializeWeather() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => fetchAndDisplayWeather(position.coords.latitude, position.coords.longitude),
-                (error) => {
-                    console.log("User denied geolocation or it failed. Loading default location.");
-                    fetchAndDisplayWeather(30.0444, 31.2357, { name: 'Cairo', country: 'Egypt' }); // Default to Cairo
+                pos => fetchAndDisplayWeather(pos.coords.latitude, pos.coords.longitude),
+                err => {
+                    alert('Location access denied.');
+                    weatherCity.textContent = "Location Denied";
                 }
             );
         } else {
-            console.log("Geolocation not supported. Loading default location.");
-            fetchAndDisplayWeather(30.0444, 31.2357, { name: 'Cairo', country: 'Egypt' }); // Default to Cairo
+            alert('Geolocation not supported.');
+        }
+    });
+
+    function init() {
+        // Try saved location from PrayTime app (if they share localStorage)
+        const saved = localStorage.getItem('savedLocation');
+        if (saved) {
+            const data = JSON.parse(saved);
+            fetchAndDisplayWeather(data.lat, data.lon, { name: data.name, country: '' });
+        } else if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                pos => fetchAndDisplayWeather(pos.coords.latitude, pos.coords.longitude),
+                () => fetchAndDisplayWeather(30.0444, 31.2357, { name: 'Cairo', country: 'Egypt' })
+            );
+        } else {
+            fetchAndDisplayWeather(30.0444, 31.2357, { name: 'Cairo', country: 'Egypt' });
         }
     }
-    
-    initializeWeather();
+
+    init();
 });

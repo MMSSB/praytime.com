@@ -604,7 +604,7 @@ a {
 }
 
 .logo h2 {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: var(--foreground);
 }
@@ -1507,3 +1507,219 @@ filter: brightness(0) saturate(100%) invert(27%) sepia(98%) saturate(374%) hue-r
     flex-direction: column;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Location Search Styles */
+.location-wrapper {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.location {
+  margin-bottom: 0; /* Override previous margin */
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted-foreground);
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn:hover {
+  background-color: var(--accent);
+  color: var(--primary);
+}
+
+.location-search {
+  background-color: var(--secondary);
+  padding: 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.search-input-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+#city-search-input {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background-color: var(--background);
+  color: var(--foreground);
+  font-size: 0.9rem;
+  outline: none;
+}
+
+#city-search-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.search-results {
+  list-style: none;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 0.5rem;
+  display: none; /* Hidden until results exist */
+}
+
+.search-results.has-results {
+  display: block;
+}
+
+.search-results li {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.search-results li:last-child {
+  border-bottom: none;
+}
+
+.search-results li:hover {
+  background-color: var(--accent);
+}
+
+.gps-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.gps-btn:hover {
+  text-decoration: underline;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Search Wrapper to position the dropdown */
+.search-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+/* Suggestions Dropdown */
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--secondary); /* Matches your theme */
+  border: 1px solid var(--border);
+  border-radius: 0 0 8px 8px;
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 1000;
+  list-style: none;
+  display: none; /* Hidden by default */
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  margin-top: 4px;
+}
+
+.search-results.has-results {
+  display: block;
+}
+
+.search-results li {
+  padding: 10px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.95rem;
+  color: var(--foreground);
+  transition: background-color 0.2s;
+}
+
+.search-results li:last-child {
+  border-bottom: none;
+}
+
+.search-results li:hover {
+  background-color: var(--primary);
+  color: #fff;
+}
+
+/* Ensure search box inputs match the theme */
+.search-box input {
+  width: 100%;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

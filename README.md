@@ -8,12 +8,12 @@
   
   <p>
     <a href="#features">Features</a> •
-    <!-- <a href="#installation">Installation</a> • -->
     <a href="#tech-stack">Tech Stack</a> •
     <a href="#credits">Credits</a>
   </p>
 
   <img src="screenshot/dashlight.png" alt="PrayTime Dashboard light mode" width="800" style="border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+  <br><br>
   <img src="screenshot/dashdark.png" alt="PrayTime Dashboard Darkmoder" width="800" style="border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
 
 </div>
@@ -26,6 +26,9 @@
 
 Unlike other apps, PrayTime respects your privacy by running entirely in your browser without tracking your data.
 
+<br>
+
+<a id="features"></a>
 ## ✨ Features
 
 - 🕌 **Accurate Prayer Times:** Calculates times for Fajr, Dhuhr, Asr, Maghrib, and Isha based on your location.
@@ -36,21 +39,28 @@ Unlike other apps, PrayTime respects your privacy by running entirely in your br
 - 🌙 **Theme Support:** Fully functional Light and Dark modes (syncs with system settings).
 - ⚙️ **Customizable:** Set a default location in settings that persists across the entire app.
 
+<br>
+
+<a id="tech-stack"></a>
 ## 🛠 Tech Stack
 
 - **Frontend:** HTML5, CSS3 (Modern Variables & Flexbox/Grid), JavaScript (ES6+).
-- **APIs:** - `Adhan.js` (Prayer Calculation)
+- **APIs:**
+  - `Adhan.js` (Prayer Calculation)
   - `Open-Meteo` (Weather & Air Quality)
   - `OpenStreetMap / Nominatim` (Geocoding & City Search)
 - **Libraries:** Chart.js (for Weather graphs).
 
+<br>
 
+<a id="credits"></a>
 ## ❤️ Credits
 
 This project was built and designed by **MMS**.
 
 - **Developer:** [MMS](https://github.com/mmssb)
-- **Libraries Used:** - `Adhan.js` (Prayer Times Calculation)
+- **Libraries Used:**
+  - `Adhan.js` (Prayer Times Calculation)
   - `Chart.js` (Weather Graphs)
   - `Open-Meteo` (Weather API)
 - **Icons:** Weather Icons / Lucide / FontAwesome
@@ -60,7 +70,7 @@ This project was built and designed by **MMS**.
 
 <div align="center">
   <br>
-  <img src="https://mmssb.github.io/assets/images/mmslogo.PNG"" alt="MMS Logo" width="60" height="60">
+  <img src="https://mmssb.github.io/assets/images/mmslogo.PNG" alt="MMS Logo" width="60" height="60">
   <br><br>
   <p><b>Made with ❤️ by MMS</b></p>
   <p>© 2024 PrayTime. All Rights Reserved.</p>

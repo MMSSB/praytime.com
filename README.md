@@ -10,6 +10,7 @@
     <a href="#features">Features</a> •
     <a href="#tech-stack">Tech Stack</a> •
     <a href="#credits">Credits</a>
+    <a href="./VERSION.md">Changelog</a>
   </p>
 
   <img src="screenshot/dashlight.png" alt="PrayTime Dashboard light mode" width="800" style="border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">

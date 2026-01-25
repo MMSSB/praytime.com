@@ -51,7 +51,7 @@
           <p class="date" id="current-date">Thursday, March 20, 2025</p>
         </header>
 
-        <div class="search-container">
+        <!-- <div class="search-container">
           <div class="search-box">
             <input type="text" id="city-search" placeholder="Search for a city..." autocomplete="off">
             <button id="search-btn">
@@ -64,8 +64,25 @@
               Use Current Location
             </button>
           </div>
+        </div> -->
+<div class="search-container">
+          <div class="search-wrapper">
+             <div class="search-box">
+              <input type="text" id="city-search" placeholder="Search for a city..." autocomplete="off">
+              <button id="search-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              </button>
+            </div>
+            <ul id="search-results" class="search-results"></ul>
+          </div>
+         
+          <div class="location-toggle">
+            <button id="use-current-location">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m16.24 7.76 2.83-2.83"/><path d="M18 12h4"/><path d="m16.24 16.24 2.83 2.83"/><path d="M12 18v4"/><path d="m4.93 19.07 2.83-2.83"/><path d="M2 12h4"/><path d="m4.93 4.93 2.83 2.83"/></svg>
+              Use Current Location
+            </button>
+          </div>
         </div>
-
         <div class="current-weather">
           <div class="weather-header">
             <div class="location">
@@ -153,13 +170,14 @@
         </section>
       </main>
     </div>
-    <div id="mms-overlay">
+    <!-- <div id="mms-overlay">
       <a href="https://mmssb.github.io/" target="_blank" rel="noopener noreferrer">
         <img src="https://mmssb.github.io/assets/images/mmslogo.PNG" alt="MMS Logo" class="mms-logo">
         <span>Made by MMS</span>
       </a>
-    </div>
+    </div> -->
     <script src="src/sidebar.js"></script>
     <script src="src/weather.js"></script>
+    <script src="locate.js"></script>
   </body>
 </html>

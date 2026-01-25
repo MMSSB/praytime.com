@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="./src/styles.css" />
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
-    <link rel="stylesheet" href="style.css">
+    <!-- <link rel="stylesheet" href="style.css"> -->
     <link rel="shortcut icon" href="src/pray.ico" type="image/x-icon">
   </head>
 
@@ -62,11 +62,31 @@
           <p class="date" id="current-date">Thursday, March 20, 2025</p>
         </header>
 
-        <div class="location">
+        <!-- <div class="location">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
           <span id="city-name">Loading location...</span>
-        </div>
+        </div> -->
+<div class="location-wrapper">
+  <div class="location" id="location-display">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+    <span id="city-name">Loading location...</span>
+    <button id="edit-location-btn" class="icon-btn" title="Change Location">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+    </button>
+  </div>
 
+  <div class="location-search" id="location-search" style="display: none;">
+    <div class="search-input-group">
+      <input type="text" id="city-search-input" placeholder="Enter city name..." autocomplete="off">
+      <button id="close-search-btn" class="icon-btn">✕</button>
+    </div>
+    <ul id="search-results" class="search-results"></ul>
+    <button id="use-gps-btn" class="gps-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5 10 10 0 0 0 0-10Z"/><path d="m9 22 3-9 9-3-9-3-3 9Z"/></svg>
+      Use My Current Location
+    </button>
+  </div>
+</div>
         <div class="current-time">
           <div class="time" id="current-time">12:00:00 PM</div>
           <div class="date-details" id="date-details">Thursday, March 20</div>
@@ -98,13 +118,15 @@
         </section>
       </main>
     </div>
-    <div id="mms-overlay">
+    <!-- <div id="mms-overlay">
     <a href="https://mmssb.github.io/" target="_blank" rel="noopener noreferrer">
       <img src="https://mmssb.github.io/assets/images/mmslogo.PNG" alt="MMS Logo" class="mms-logo">
       <span>Made by MMS</span>
     </a>
-  </div>
+  </div> -->
     <script src="src/adhan.js"></script>
     <script src="src/app.js"></script>
+        <script src="locate.js"></script>
+
   </body>
 </html>

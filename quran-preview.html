@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PrayTime | Immersive Mushaf</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+      (function() {
+        const theme = localStorage.getItem('theme') || 'system';
+        if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) { 
+            document.documentElement.classList.add('dark');
+            document.body.classList.add('dark'); 
+        } else { 
+            document.documentElement.classList.remove('dark');
+            document.body.classList.remove('dark');
+            document.body.classList.add('light'); 
+        }
+      })();
+    </script>
+
+    <style>
+        /* Immersive Full Page Reset */
+        body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden; background: var(--background); }
+        .hidden { display: none !important; }
+
+        /* Custom App Container avoiding sidebar entirely */
+        .mushaf-app {
+            display: flex; flex-direction: column; height: 100vh; width: 100vw;
+            position: fixed; top: 0; left: 0; z-index: 1000; background: var(--background);
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            height: 60px; min-height: 60px; display: flex; align-items: center; justify-content: space-between;
+            padding: 0 15px; background: var(--secondary); border-bottom: 1px solid var(--border);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); z-index: 10;
+        }
+        .top-nav button {
+            background: none; border: none; color: var(--foreground); font-size: 1.1rem;
+            cursor: pointer; padding: 10px; border-radius: 8px; transition: 0.2s;
+        }
+        .top-nav button:hover { background: var(--accent); color: var(--primary); }
+        .surah-title-top { font-family: 'Amiri Quran', serif; font-size: 1.5rem; color: var(--primary); }
+
+        /* The Reading Area */
+        .reader-wrapper {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            background-color: var(--background); position: relative; overflow: hidden;
+            /* Prevent scrolling up/down */
+            touch-action: pan-x;
+        }
+
+        /* The Authentic "Book Page" */
+        .mushaf-page {
+            width: 100%; height: 100%; max-width: 650px;
+            background-color: #fcf9f2; /* Authentic Medina Mushaf Paper Color */
+            border-left: 1px solid rgba(0,0,0,0.1); border-right: 1px solid rgba(0,0,0,0.1);
+            display: flex; flex-direction: column; padding: 3% 5%;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1); position: absolute;
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .dark .mushaf-page {
+            background-color: #1a1e23; border-color: #2a3038; box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* Book spine shadow effect */
+        .mushaf-page::after {
+            content: ''; position: absolute; top: 0; bottom: 0; right: 0; width: 40px;
+            background: linear-gradient(to left, rgba(0,0,0,0.06), transparent); pointer-events: none;
+        }
+        .dark .mushaf-page::after { background: linear-gradient(to left, rgba(0,0,0,0.3), transparent); }
+
+        /* Dynamic Text Sizing to fill screen */
+        .ayahs-text {
+            flex: 1; font-family: 'Amiri Quran', serif; direction: rtl;
+            text-align: justify; text-align-last: center; 
+            /* Scalable typography based on viewport to fit perfectly */
+            font-size: clamp(1rem, 4.5vh, 2.5rem); 
+            line-height: 2.1; word-spacing: 2px;
+            color: #111; display: flex; flex-direction: column; justify-content: center;
+        }
+        .dark .ayahs-text { color: #e2e8f0; }
+
+        .page-footer {
+            height: 40px; text-align: center; display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem; color: #666; font-weight: bold; border-top: 1px dashed rgba(0,0,0,0.1);
+        }
+        .dark .page-footer { color: #888; border-color: rgba(255,255,255,0.1); }
+
+        .ayah-marker {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 1.5em; height: 1.5em;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='none' stroke='%23b68b42' stroke-width='4' d='M50 5 L60 25 L80 20 L75 40 L95 50 L75 60 L80 80 L60 75 L50 95 L40 75 L20 80 L25 60 L5 50 L25 40 L20 20 L40 25 Z'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%23b68b42' stroke-width='2'/%3E%3C/svg%3E");
+            background-size: cover; background-position: center;
+            font-family: 'Inter', sans-serif; font-size: 0.45em;
+            margin: 0 4px; color: #b68b42; vertical-align: middle;
+        }
+
+        .surah-header {
+            text-align: center; font-family: 'Amiri Quran', serif; font-size: 1.2em;
+            color: #b68b42; border: 2px solid #b68b42; border-radius: 8px;
+            padding: 5px; margin: 10px 0; background: rgba(182, 139, 66, 0.05);
+        }
+
+        .bismillah { text-align: center; font-family: 'Amiri Quran', serif; font-size: 1.3em; margin-bottom: 10px; color: inherit; }
+
+        /* Desktop side buttons */
+        .nav-side-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: var(--secondary); color: var(--primary); border: 1px solid var(--border);
+            width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem;
+            cursor: pointer; z-index: 20; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none; align-items: center; justify-content: center; transition: 0.2s;
+        }
+        .nav-side-btn:hover { background: var(--primary); color: white; transform: translateY(-50%) scale(1.1); }
+        .nav-side-left { left: 20px; }
+        .nav-side-right { right: 20px; }
+        
+        @media (min-width: 768px) {
+            .nav-side-btn { display: flex; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mushaf-app" id="fullscreen-area">
+        <!-- Top Navigation -->
+        <div class="top-nav" id="top-nav">
+            <button onclick="window.location.href='Quran.html'" title="Back to Index">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div class="surah-title-top" id="surah-title-top">المصحف</div>
+            <div style="display: flex; gap: 5px;">
+                <button id="btn-zen" title="Zen Mode">
+                    <i class="fa-solid fa-expand"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Reader Area -->
+        <div class="reader-wrapper" id="reader-wrapper">
+            <!-- Desktop Buttons -->
+            <button class="nav-side-btn nav-side-left" id="btn-next" title="Next Page"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="nav-side-btn nav-side-right" id="btn-prev" title="Previous Page"><i class="fa-solid fa-chevron-right"></i></button>
+
+            <!-- Page Container (Slides left/right) -->
+            <div class="mushaf-page" id="mushaf-page">
+                <div id="page-content" class="ayahs-text">
+                    <div style="text-align: center; color: var(--primary);">
+                        <i class="fa-solid fa-spinner fa-spin fa-2x"></i>
+                        <div style="font-family: 'Inter', sans-serif; font-size: 1rem; margin-top: 15px;">Loading...</div>
+                    </div>
+                </div>
+                <div class="page-footer">
+                    - <span id="footer-page-num">١</span> -
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        const totalPages = 604;
+        
+        const pageContent = document.getElementById('page-content');
+        const footerPageNum = document.getElementById('footer-page-num');
+        const surahTitleTop = document.getElementById('surah-title-top');
+        const mushafPage = document.getElementById('mushaf-page');
+        const readerWrapper = document.getElementById('reader-wrapper');
+        const topNav = document.getElementById('top-nav');
+
+        // Fetch and Render Page
+        async function loadPage(pageNumber) {
+            pageContent.innerHTML = `<div style="text-align: center; color: var(--primary);"><i class="fa-solid fa-spinner fa-spin fa-2x"></i></div>`;
+            
+            try {
+                const res = await fetch(`https://api.alquran.cloud/v1/page/${pageNumber}/quran-uthmani`);
+                const data = await res.json();
+                
+                let html = '';
+                let currentSurahRendered = null;
+
+                data.data.ayahs.forEach(ayah => {
+                    if (ayah.surah.number !== currentSurahRendered) {
+                        html += `<div class="surah-header">${ayah.surah.name}</div>`;
+                        if (ayah.surah.number !== 1 && ayah.surah.number !== 9) {
+                            html += `<div class="bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>`;
+                        }
+                        currentSurahRendered = ayah.surah.number;
+                        surahTitleTop.textContent = ayah.surah.name; // Set top title
+                    }
+
+                    let text = ayah.text;
+                    if (ayah.numberInSurah === 1 && ayah.surah.number !== 1 && ayah.surah.number !== 9) {
+                        text = text.replace("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ", '').trim();
+                    }
+
+                    html += `<span>${text} <span class="ayah-marker">${toArabicNum(ayah.numberInSurah)}</span></span> `;
+                });
+
+                pageContent.innerHTML = html;
+                footerPageNum.textContent = toArabicNum(pageNumber);
+                
+            } catch (error) {
+                pageContent.innerHTML = '<div style="color:var(--destructive); text-align:center; font-family: Inter, sans-serif;">Connection error. Please try again.</div>';
+            }
+        }
+
+        function toArabicNum(n) { return ("" + n).replace(/[0-9]/g, t => "٠١٢٣٤٥٦٧٨٩".slice(+t, +t+1)); }
+
+        // Navigation Logic
+        function goNext() {
+            if (currentPage < totalPages) { 
+                currentPage++; 
+                animatePageTurn(-50, loadPage); // Slide Left
+            }
+        }
+
+        function goPrev() {
+            if (currentPage > 1) { 
+                currentPage--; 
+                animatePageTurn(50, loadPage); // Slide Right
+            }
+        }
+
+        // Smooth Page Turn Animation
+        function animatePageTurn(offset, callback) {
+            mushafPage.style.transition = 'transform 0.15s ease-out, opacity 0.15s';
+            mushafPage.style.transform = `translateX(${offset}px) scale(0.98)`;
+            mushafPage.style.opacity = '0';
+            
+            setTimeout(() => {
+                callback(currentPage);
+                mushafPage.style.transition = 'none';
+                mushafPage.style.transform = `translateX(${-offset}px) scale(0.98)`;
+                
+                setTimeout(() => {
+                    mushafPage.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s';
+                    mushafPage.style.transform = `translateX(0) scale(1)`;
+                    mushafPage.style.opacity = '1';
+                }, 50);
+            }, 150);
+        }
+
+        document.getElementById('btn-next').onclick = goNext; // Next is physically to the left in Arabic
+        document.getElementById('btn-prev').onclick = goPrev;
+
+        // --- Swipe Gesture Logic ---
+        let touchstartX = 0;
+        let isDragging = false;
+        
+        readerWrapper.addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX;
+            isDragging = true;
+            mushafPage.style.transition = 'none';
+        }, {passive: true});
+
+        readerWrapper.addEventListener('touchmove', e => {
+            if (!isDragging) return;
+            let currentX = e.changedTouches[0].screenX - touchstartX;
+            // Add resistance
+            mushafPage.style.transform = `translateX(${currentX * 0.5}px)`;
+        }, {passive: true});
+
+        readerWrapper.addEventListener('touchend', e => {
+            isDragging = false;
+            let touchendX = e.changedTouches[0].screenX;
+            let distance = touchendX - touchstartX;
+            
+            mushafPage.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)';
+            
+            // Swipe Right (Pulling left page right -> Go Prev in RTL)
+            if (distance > 70) {
+                goPrev();
+            } 
+            // Swipe Left (Pulling right page left -> Go Next in RTL)
+            else if (distance < -70) {
+                goNext();
+            } else {
+                // Snap back
+                mushafPage.style.transform = 'translateX(0)';
+            }
+        }, {passive: true});
+
+        // --- Zen / Fullscreen Mode ---
+        const btnZen = document.getElementById('btn-zen');
+        let isZen = false;
+
+        btnZen.addEventListener('click', () => {
+            const app = document.getElementById('fullscreen-area');
+            if (!document.fullscreenElement) {
+                if(app.requestFullscreen) app.requestFullscreen();
+                topNav.style.display = 'none';
+                isZen = true;
+            } else {
+                if(document.exitFullscreen) document.exitFullscreen();
+                topNav.style.display = 'flex';
+                isZen = false;
+            }
+        });
+
+        // Tap middle of screen to toggle top nav in Zen mode
+        mushafPage.addEventListener('click', (e) => {
+            if(document.fullscreenElement) {
+                topNav.style.display = topNav.style.display === 'none' ? 'flex' : 'none';
+            }
+        });
+
+        // Init
+        loadPage(currentPage);
+    </script>
+</body>
+</html>

@@ -13,6 +13,9 @@
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <!-- <link rel="stylesheet" href="style.css"> -->
     <link rel="shortcut icon" href="src/pray.ico" type="image/x-icon">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    
   </head>
 
   <body>
@@ -39,6 +42,9 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
             Weather
           </a>
+                <a href="Quran.html" class="">
+                    <i class="fa-solid fa-book-open"></i> Quran 
+                </a>
           <a href="#">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             Coming soon
@@ -92,7 +98,7 @@
           <div class="date-details" id="date-details">Thursday, March 20</div>
           <div class="islamic-date" id="islamic-date">15 Ramadan 1445</div>
           <div class="calendar-type">Islamic Calendar</div>
-          <div class="current-prayer" id="current-prayer"></div>
+          <!-- <div class="current-prayer" id="current-prayer"></div> -->
         </div>
 
         <section class="prayer-times">
@@ -127,6 +133,18 @@
     <script src="src/adhan.js"></script>
     <script src="src/app.js"></script>
         <script src="locate.js"></script>
-
+<script>
+  (function() {
+    const theme = localStorage.getItem('theme') || 'system';
+    if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+      document.body.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.body.classList.remove('dark');
+      document.body.classList.add('light');
+    }
+  })();
+</script>
   </body>
 </html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Masjid Finder - PrayTime</title>
+    <meta name="description" content="Find masjids and mosques near your location" />
+    <link rel="stylesheet" href="./src/styles.css" />
+    <link rel="shortcut icon" href="src/pray.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+      /* --- Modern Dual-Pane Layout --- */
+      .finder-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 1.5rem;
+        height: calc(100vh - 180px);
+        min-height: 600px;
+      }
+
+      /* --- Map Section --- */
+      .map-section {
+        position: relative;
+        background-color: var(--secondary);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .map-frame-container {
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      .map-frame-container iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+
+      /* Floating Action Buttons over Map */
+      .map-fab {
+        position: absolute;
+        bottom: 4.5rem;
+        right: 0.5rem;
+        background: var(--primary);
+        color: white;
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, background 0.2s;
+        z-index: 10;
+      }
+
+      .map-fab:hover {
+        transform: scale(1.05);
+        background: var(--primary-foreground);
+        color: var(--primary);
+      }
+
+      .map-fab-top {
+        bottom: 8rem;
+        background: var(--background);
+        color: var(--foreground);
+      }
+
+      /* --- List Section (Sidebar) --- */
+      .list-section {
+        background-color: var(--secondary);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      }
+
+      .list-header {
+        padding: 1.25rem;
+        border-bottom: 1px solid var(--border);
+        background: var(--secondary);
+        z-index: 5;
+      }
+
+      .list-header h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .list-scroll-area {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      /* --- Mosque Cards --- */
+      .mosque-card {
+        background: var(--background);
+        border: 1px solid var(--border);
+        border-radius: calc(var(--radius) - 0.25rem);
+        padding: 1.25rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .mosque-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border-color: var(--primary);
+      }
+
+      .mosque-title {
+        font-weight: 600;
+        font-size: 1.05rem;
+        margin-bottom: 0.25rem;
+        color: var(--foreground);
+      }
+
+      .mosque-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.85rem;
+        color: var(--muted-foreground);
+        margin-bottom: 0.75rem;
+      }
+
+      .mosque-distance {
+        color: var(--primary);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+
+      .card-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .btn-action {
+        flex: 1;
+        padding: 0.5rem;
+        border: none;
+        border-radius: 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.4rem;
+        transition: opacity 0.2s;
+      }
+
+      .btn-directions {
+        background: var(--primary);
+        color: white;
+        text-decoration: none;
+      }
+
+      .btn-directions:hover { opacity: 0.9; }
+
+      /* --- Mobile Responsiveness --- */
+      @media screen and (max-width: 992px) {
+        .finder-wrapper {
+          grid-template-columns: 1fr;
+          height: auto;
+        }
+        
+        .map-section {
+          height: 400px;
+          flex: none;
+        }
+
+        .list-section {
+          height: 500px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="app">
+      <!-- Hamburger Menu Button -->
+      <button class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar" id="sidebar">
+        <div class="logo">
+          <img src="./src/masjid.png" alt="Islamic App" class="logo-icon">
+          <h2>Masjid Finder</h2>
+        </div>
+        <nav>
+          <a href="index.html" >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Home
+          </a>
+          <a href="weather.html">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+            Weather
+          </a>
+                <a href="quran.html" class="">
+                    <i class="fa-solid fa-book-open"></i> Quran 
+                </a>
+          <!-- <a href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Coming soon
+          </a> -->
+                    <a href="masjid-finder.html" class="active">
+            <i class="fa-solid fa-map-location-dot"></i> Masjid Finder
+          </a>
+          <!-- <a href="qibla.html">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v8"/><circle cx="12" cy="12" r="10"/></svg>
+            Qibla
+        </a> -->
+          <a href="settings.html">
+            <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Settings
+          </a>
+        </nav>
+      </aside>
+
+      <!-- Main Panel View -->
+      <main class="main-content">
+        <header>
+          <h1>Mosque Finder</h1>
+          <p class="date" id="current-date">Loading date...</p>
+        </header>
+
+        <div class="location" style="margin-bottom: 1.5rem;">
+          <i class="fa-solid fa-location-dot"></i>
+          <span id="city-name">Detecting location...</span>
+        </div>
+
+        <!-- Modern Dual-Pane Layout -->
+        <div class="finder-wrapper">
+          
+          <!-- LEFT/TOP PANE: Interactive Map -->
+          <section class="map-section">
+            <div class="map-frame-container">
+              <iframe 
+                id="google-maps-iframe"
+                src="about:blank"
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+              </iframe>
+              
+              <!-- Quick Action FABs on Map -->
+              <a href="#" id="view-large-btn" target="_blank" class="map-fab map-fab-top" title="Open in Google Maps App">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </a>
+              <button id="recenter-btn" class="map-fab" title="Use My GPS Location">
+                <i class="fa-solid fa-location-crosshairs"></i>
+              </button>
+            </div>
+          </section>
+
+          <!-- RIGHT/BOTTOM PANE: Mosque List -->
+          <section class="list-section">
+            <div class="list-header">
+              <h2>Nearby Places of Worship</h2>
+              <p style="font-size: 0.85rem; color: var(--muted-foreground);">Based on real-time map data (5km radius)</p>
+            </div>
+            
+            <div class="list-scroll-area" id="mosque-list-container">
+              <div style="text-align: center; color: var(--muted-foreground); padding: 2rem;">
+                <i class="fa-solid fa-spinner fa-spin fa-2x"></i>
+                <p style="margin-top: 1rem;">Searching nearby area...</p>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+
+    <script src="locate.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // --- UI Setup ---
+        const hamburger = document.getElementById('hamburger');
+        const sidebar = document.getElementById('sidebar');
+        const currentDateElement = document.getElementById('current-date');
+        const cityNameElement = document.getElementById('city-name');
+        const mapsIframe = document.getElementById('google-maps-iframe');
+        const viewLargeBtn = document.getElementById('view-large-btn');
+        const recenterBtn = document.getElementById('recenter-btn');
+        const listContainer = document.getElementById('mosque-list-container');
+
+        // Sidebar logic
+        if (hamburger && sidebar) {
+          hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            sidebar.classList.toggle('active');
+          });
+        }
+
+        // Date Display
+        const dateOptions = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
+        currentDateElement.textContent = new Date().toLocaleDateString('en-US', dateOptions);
+
+        // --- Location & Map Logic ---
+        let currentLat = 0;
+        let currentLon = 0;
+        let locationName = "cairo";
+
+        function loadMapContext(lat, lon, name) {
+          cityNameElement.textContent = name;
+          const searchQuery = `masjid mosque near ${lat},${lon}`;
+          const encodedQuery = encodeURIComponent(searchQuery);
+          
+          mapsIframe.src = `https://maps.google.com/maps?q=${encodedQuery}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
+          viewLargeBtn.href = `https://maps.google.com/maps?q=${encodedQuery}`;
+          
+          fetchRealMosques(lat, lon);
+        }
+
+        function initLocation() {
+          const savedLocation = localStorage.getItem('savedLocation');
+          if (savedLocation) {
+            try {
+              const data = JSON.parse(savedLocation);
+              currentLat = data.lat;
+              currentLon = data.lon;
+              locationName = data.name;
+            } catch (e) { console.error(e); }
+          }
+          loadMapContext(currentLat, currentLon, locationName);
+        }
+
+        // GPS Recenter Button
+        recenterBtn.addEventListener('click', () => {
+          if (navigator.geolocation) {
+            recenterBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            navigator.geolocation.getCurrentPosition((pos) => {
+              currentLat = pos.coords.latitude;
+              currentLon = pos.coords.longitude;
+              loadMapContext(currentLat, currentLon, "Current Location");
+              recenterBtn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i>';
+            }, () => {
+              alert("Could not access GPS. Please check permissions.");
+              recenterBtn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i>';
+            });
+          }
+        });
+
+        // --- Math Helper: Calculate distance between two coordinates in km ---
+        function getDistance(lat1, lon1, lat2, lon2) {
+          const R = 6371; // Earth's radius in km
+          const dLat = (lat2 - lat1) * Math.PI / 180;
+          const dLon = (lon2 - lon1) * Math.PI / 180;
+          const a = 
+            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+          return R * c;
+        }
+
+        // --- REAL API CALL (OpenStreetMap Overpass API) ---
+        async function fetchRealMosques(lat, lon) {
+          listContainer.innerHTML = `
+            <div style="text-align: center; color: var(--muted-foreground); padding: 2rem;">
+              <i class="fa-solid fa-spinner fa-spin fa-2x"></i>
+              <p style="margin-top: 1rem;">Locating nearby masjids...</p>
+            </div>
+          `;
+
+          // Overpass QL to find Islamic places of worship within 5000 meters (5km)
+          const radius = 5000;
+          const query = `
+            [out:json][timeout:25];
+            (
+              node["amenity"="place_of_worship"]["religion"="muslim"](around:${radius},${lat},${lon});
+              way["amenity"="place_of_worship"]["religion"="muslim"](around:${radius},${lat},${lon});
+            );
+            out center;
+          `;
+          const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
+
+          try {
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (!data.elements || data.elements.length === 0) {
+              listContainer.innerHTML = `
+                <div style="text-align: center; color: var(--muted-foreground); padding: 2rem;">
+                  <i class="fa-solid fa-circle-exclamation fa-2x"></i>
+                  <p style="margin-top: 1rem;">No mosques found within 5km of this location in our database.</p>
+                </div>
+              `;
+              return;
+            }
+
+            // Process and sort results
+            let mosques = data.elements.map(element => {
+              // Node has lat/lon, Way returns center.lat/center.lon
+              const mLat = element.lat || element.center.lat;
+              const mLon = element.lon || element.center.lon;
+              
+              const distanceKm = getDistance(lat, lon, mLat, mLon);
+              const name = element.tags.name || element.tags['name:en'] || "Unnamed Mosque";
+              
+              return { name, distanceKm, lat: mLat, lon: mLon };
+            });
+
+            // Filter out unnamed locations if they are too generic, and sort by distance
+            mosques = mosques.sort((a, b) => a.distanceKm - b.distanceKm);
+
+            // Render list
+            listContainer.innerHTML = '';
+            mosques.slice(0, 15).forEach(mosque => { // Limit to closest 15
+              const distanceText = mosque.distanceKm < 1 
+                ? `${Math.round(mosque.distanceKm * 1000)} m` 
+                : `${mosque.distanceKm.toFixed(1)} km`;
+              
+              const mapsLink = `https://www.google.com/maps/dir/?api=1&destination=${mosque.lat},${mosque.lon}&origin=${lat},${lon}`;
+              
+              const card = document.createElement('div');
+              card.className = 'mosque-card';
+              
+              card.innerHTML = `
+                <div class="mosque-title">${mosque.name}</div>
+                <div class="mosque-meta">
+                  <span class="mosque-distance"><i class="fa-solid fa-person-walking"></i> ${distanceText}</span>
+                </div>
+                <div class="card-actions">
+                  <a href="${mapsLink}" target="_blank" class="btn-action btn-directions">
+                    <i class="fa-solid fa-route"></i> Directions
+                  </a>
+                </div>
+              `;
+              listContainer.appendChild(card);
+            });
+
+          } catch (error) {
+            console.error("Overpass API Error:", error);
+            listContainer.innerHTML = `
+              <div style="text-align: center; color: var(--destructive); padding: 2rem;">
+                <i class="fa-solid fa-triangle-exclamation fa-2x"></i>
+                <p style="margin-top: 1rem;">Failed to load mosque data. Please try again later.</p>
+              </div>
+            `;
+          }
+        }
+
+        // Initialize App
+        initLocation();
+
+        // Theme Setup
+        const applyTheme = (theme) => {
+          document.body.classList.remove('light', 'dark');
+          if (theme === 'system') {
+            document.body.classList.add(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          } else {
+            document.body.classList.add(theme);
+          }
+        };
+        applyTheme(localStorage.getItem('theme') || 'system');
+      });
+    </script>
+  </body>
+</html>

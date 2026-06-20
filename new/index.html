@@ -7,7 +7,31 @@
   
   <link rel="stylesheet" href="./src/modern.css" /> 
   <link rel="shortcut icon" href="src/pray.ico" type="image/x-icon">
-  
+  <!-- Font Awesome Pro Core & Standard Styles -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/brands.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/duotone.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/fontawesome.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/light.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/solid.css" />
+
+<!-- Sharp Styles -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/sharp-duotone-solid.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/sharp-light.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/sharp-regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/sharp-solid.css" />
+
+<!-- Special Pro+ Variants -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/chisel-regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/etch-solid.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/graphite-thin.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/jelly-regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/notdog-solid.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/slab-regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/thumbprint-light.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/utility-semibold.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/whiteboard-semibold.css" />
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -37,10 +61,12 @@
         <h2>PrayTime</h2>
       </div>
       <nav class="side-nav" id="main-nav">
-        <a href="index.html" class="nav-link"><i class="ph-fill ph-house"></i> Home</a>
+        <a href="index.html" class="nav-link"><i class="fa-solid fa-mosque"></i> Pray Time</a>
         <a href="weather.html" class="nav-link"><i class="ph ph-cloud-sun"></i> Weather</a>
         <a href="quran.html" class="nav-link"><i class="ph ph-book-open-text"></i> Quran</a>
-        <a href="masjid-finder.html" class="nav-link"><i class="ph ph-map-pin"></i> Mosques</a>
+                   <a href="q-audio.html" class="nav-link "><i class="ph ph-disc"></i><span>Audio</span></a>
+
+                <a href="masjid-finder.html" class="nav-link"><i class="ph ph-map-pin"></i> Masjid Finder</a>
         <a href="settings.html" class="nav-link"><i class="ph ph-gear"></i> Settings</a>
       </nav>
     </aside>
@@ -109,18 +135,21 @@
     </div>
     
     <div class="sheet-links">
-      <a href="index.html" class="nav-link active"><i class="ph-fill ph-house"></i> Home</a>
+      <a href="index.html" class="nav-link active"><i class="fa-solid fa-mosque"></i> Pray Time</a>
       <a href="weather.html" class="nav-link"><i class="ph ph-cloud-sun"></i> Weather</a>
       <a href="quran.html" class="nav-link"><i class="ph ph-book-open-text"></i> Quran</a>
-      <a href="masjid-finder.html" class="nav-link"><i class="ph ph-map-pin"></i> Mosques</a>
+      <a href="q-audio.html" class="nav-link "><i class="ph ph-disc"></i><span>Audio</span></a>
+      <a href="masjid-finder.html" class="nav-link"><i class="ph ph-map-pin"></i> Masjid Finder</a>
       <a href="settings.html" class="nav-link"><i class="ph ph-gear"></i> Settings</a>
     </div>
   </div>
 
   <nav class="bottom-nav" id="bottom-nav">
-    <a href="index.html" class="nav-link active"><i class="ph-fill ph-house"></i><span>Home</span></a>
-    <a href="weather.html" class="nav-link"><i class="ph ph-cloud-sun"></i><span>Weather</span></a>
-    <a href="masjid-finder.html" class="nav-link"><i class="ph ph-map-pin"></i><span>Map</span></a>
+    <a href="index.html" class="nav-link active"><i class="fa-solid fa-mosque"></i><span>Pray Time</span></a>
+    <!-- <a href="weather.html" class="nav-link"><i class="ph ph-cloud-sun"></i><span>Weather</span></a> -->
+    <a href="quran.html" class="nav-link active"><i class="ph ph-book-open-text"></i><span>Quran</span></a>
+
+    <a href="masjid-finder.html" class="nav-link"><i class="ph ph-map-pin"></i><span>Masjid Finder</span></a>
     <button class="nav-menu-btn" id="mobile-menu-btn">
       <i class="ri-menu-4-line"></i><span>Menu</span>
     </button>

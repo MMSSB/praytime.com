@@ -27,9 +27,7 @@
       min-height: 600px;
     }
 
-    /* ==============================================================
-       MAP CONTAINER & OVERLAYS
-       ============================================================== */
+    /* Map Container & Overlays */
     .map-primary-section {
       background: var(--surface-color);
       border: 1px solid var(--border-color);
@@ -86,7 +84,7 @@
       background: var(--bg-color);
     }
 
-    /* Map Floating Action Buttons (FABs) */
+    /* Map FABs */
     .map-fab-stack {
       position: absolute;
       bottom: 30px;
@@ -112,27 +110,26 @@
     .map-fab.primary { background: var(--text-main); color: var(--bg-color); }
     .map-fab.primary:hover { background: var(--accent); color: #fff; }
 
-    /* Map Rotating Marker CSS */
+    /* Map Rotating Marker CSS (Zero Jitter) */
     .user-heading-cone {
       width: 0; height: 0;
       border-left: 30px solid transparent; border-right: 30px solid transparent;
-      border-bottom: 70px solid rgba(0, 172, 137, 0.35);
-      position: absolute; top: -55px; left: -22px;
+      border-bottom: 80px solid rgba(0, 172, 137, 0.4);
+      position: absolute; top: -65px; left: -22px;
       transform-origin: 50% 100%;
       will-change: transform;
-      filter: drop-shadow(0 -4px 10px rgba(0,172,137,0.3));
+      filter: drop-shadow(0 -4px 10px rgba(0,172,137,0.4));
+      transition: border-bottom-color 0.3s ease;
     }
     .cone-indicator-line {
       position: absolute;
-      width: 4px; height: 70px;
+      width: 4px; height: 80px;
       background: linear-gradient(to top, rgba(0,172,137,0), var(--accent));
-      left: calc(50% - 2px); top: -70px;
+      left: calc(50% - 2px); top: -80px;
       border-radius: 4px;
     }
 
-    /* ==============================================================
-       TELEMETRY & ANALYTICS SIDEBAR
-       ============================================================== */
+    /* Telemetry & Analytics Sidebar */
     .telemetry-sidebar { 
       display: flex; flex-direction: column; gap: 20px; 
       overflow-y: auto; padding-right: 8px;
@@ -158,7 +155,6 @@
     }
     .telemetry-header i { color: var(--accent); font-size: 1.2rem; }
 
-    /* High Density Metric Grids */
     .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .metric-item {
       background: var(--bg-color); border: 1px solid var(--border-color);
@@ -167,14 +163,12 @@
     }
     .metric-item:hover { border-color: var(--accent); }
     .metric-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; }
-    .metric-value { font-size: 1.25rem; font-weight: 800; color: var(--text-main); display: flex; align-items: baseline; gap: 4px; }
+    .metric-value { font-size: 1.25rem; font-weight: 800; color: var(--text-main); display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap;}
     .metric-unit { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
 
-    /* GPS Health Bar */
     .health-bar-container { width: 100%; height: 8px; background: var(--border-color); border-radius: 10px; margin-top: 10px; overflow: hidden; }
     .health-bar-fill { height: 100%; background: #00ac89; width: 0%; transition: width 0.5s ease; }
 
-    /* Diagnostic Strips */
     .diagnostic-strip {
       display: flex; align-items: center; gap: 12px;
       background: var(--bg-color); border: 1px solid var(--border-color);
@@ -185,7 +179,6 @@
     .diag-ok { color: #00ac89; border-color: rgba(0,172,137,0.3); background: rgba(0,172,137,0.05); }
     .diag-warn { color: #f59e0b; border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.05); }
 
-    /* Fullscreen map override */
     .map-fullscreen {
       position: fixed !important; top: 0 !important; left: 0 !important;
       width: 100vw !important; height: 100vh !important;
@@ -195,7 +188,7 @@
     @media screen and (max-width: 950px) {
       .qibla-pane-wrapper { grid-template-columns: 1fr; height: auto; display: flex; flex-direction: column; }
       .map-primary-section { height: 60vh; min-height: 400px; }
-      .telemetry-sidebar { overflow-y: visible; padding-right: 0; }
+      .telemetry-sidebar { overflow-y: visible; padding-right: 0; padding-bottom: 100px; }
       .map-header-toolbar { flex-direction: column; gap: 12px; align-items: stretch; }
       .map-style-selector { overflow-x: auto; white-space: nowrap; }
     }
@@ -211,7 +204,6 @@
   </script>
 
   <div class="app">
-    <!-- Navigation Sidebar Panel Layout Link Column -->
     <aside class="sidebar" id="sidebar">
       <div class="logo">
         <img src="./src/pray.png" alt="Islamic App" class="logo-icon">
@@ -269,6 +261,21 @@
 
         <!-- RIGHT: MASSIVE TELEMETRY DASHBOARD -->
         <section class="telemetry-sidebar">
+
+          <!-- Card 0: Live Prayer Status (NEW) -->
+          <div class="telemetry-card">
+            <div class="telemetry-header"><i class="ph-fill ph-clock"></i> Live Prayer Status</div>
+            <div class="metric-grid">
+              <div class="metric-item">
+                <div class="metric-label">Current Prayer</div>
+                <div class="metric-value" id="val-current-prayer">--</div>
+              </div>
+              <div class="metric-item" style="background: rgba(0,172,137,0.05); border-color: rgba(0,172,137,0.3);">
+                <div class="metric-label">Next Prayer</div>
+                <div class="metric-value" id="val-next-prayer" style="color: var(--accent);">--</div>
+              </div>
+            </div>
+          </div>
           
           <!-- Card 1: Core Navigation Vectors -->
           <div class="telemetry-card">
@@ -287,8 +294,8 @@
                 <div class="metric-value" id="val-dist-km">--<span class="metric-unit">km</span></div>
               </div>
               <div class="metric-item">
-                <div class="metric-label">Distance (Imperial)</div>
-                <div class="metric-value" id="val-dist-mi">--<span class="metric-unit">mi</span></div>
+                <div class="metric-label">Deviation Error</div>
+                <div class="metric-value" id="val-deviation">--<span class="metric-unit">°</span></div>
               </div>
             </div>
           </div>
@@ -318,11 +325,11 @@
           <div class="telemetry-card">
             <div class="telemetry-header"><i class="ph-fill ph-sun"></i> Qibla By The Sun</div>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
-              Face the sun or observe a vertical shadow at this exact time to find the precise Qibla direction without a compass.
+              Observe a vertical shadow at this exact time. The shadow (or the sun itself) will align perfectly with the Qibla azimuth.
             </p>
             <div class="metric-grid" style="grid-template-columns: 1fr;">
               <div class="metric-item">
-                <div class="metric-label">Next Solar Alignment Time</div>
+                <div class="metric-label">Solar Alignment Time</div>
                 <div class="metric-value" id="val-sun-time"><i class="ph ph-clock"></i> Computing...</div>
               </div>
             </div>
@@ -346,16 +353,9 @@
               <div style="flex:1;">Magnetometer Cone Sensor</div>
               <span id="val-sensor-status">Standby</span>
             </div>
-
-            <div class="diagnostic-strip diag-ok">
-              <i class="ph-fill ph-wave-sine"></i> 
-              <div style="flex:1;">Magnetic Declination Est.</div>
-              <span id="val-declination">± 4.5°</span>
-            </div>
           </div>
 
         </section>
-
       </div>
     </main>
   </div>
@@ -401,21 +401,13 @@
     <button class="nav-menu-btn" id="mobile-menu-btn"><i class="ri-menu-4-line"></i><span>Menu</span></button>
   </nav>
 
-  <!-- OLD AR COMPASS MARKUP IS COMMENTED OUT BELOW PER REQUEST -->
-  <!-- 
-  <section id="compass-view-container">
-    <div class="compass-outer-chassis">...</div>
-  </section> 
-  -->
-
-  <!-- Leaflet JS Library -->
+  <!-- Scripts -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <!-- Optional: SunCalc for extreme solar precision (simulated below for standalone) -->
+  <!-- Requires script.js which exposes window.getGlobalPrayerTimes -->
   <script src="src/script.js"></script>
   
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // --- Constants & Global State ---
       const KAABA_LAT = 21.422487;
       const KAABA_LON = 39.826206;
 
@@ -425,7 +417,6 @@
       let smoothedHeading = 0;
       let animationFrameId = null;
 
-      // Map Engine State
       let leafletMap = null;
       let userMarker = null;
       let qiblaPolyline = null;
@@ -445,18 +436,16 @@
         mapWrapper: document.getElementById('map-wrapper'),
         mapCore: document.getElementById('qibla-map-core'),
         
-        // FABs
         fabCalibrate: document.getElementById('fab-calibrate'),
         fabFullscreen: document.getElementById('fab-fullscreen'),
         fabKaaba: document.getElementById('fab-kaaba'),
         fabUser: document.getElementById('fab-user'),
         mapBtns: document.querySelectorAll('.map-btn'),
         
-        // Telemetry Data Points
         valQibla: document.getElementById('val-qibla'),
         valHeading: document.getElementById('val-heading'),
         valDistKm: document.getElementById('val-dist-km'),
-        valDistMi: document.getElementById('val-dist-mi'),
+        valDeviation: document.getElementById('val-deviation'),
         
         valLatDec: document.getElementById('val-lat-dec'),
         valLonDec: document.getElementById('val-lon-dec'),
@@ -464,6 +453,8 @@
         valLonDms: document.getElementById('val-lon-dms'),
         
         valSunTime: document.getElementById('val-sun-time'),
+        valCurrentPrayer: document.getElementById('val-current-prayer'),
+        valNextPrayer: document.getElementById('val-next-prayer'),
         
         gpsBar: document.getElementById('gps-health-bar'),
         gpsAccText: document.getElementById('val-gps-acc'),
@@ -479,10 +470,8 @@
           leafletMap = L.map('qibla-map-core', { zoomControl: false }).setView([lat, lon], 4);
           L.control.zoom({ position: 'topleft' }).addTo(leafletMap);
           L.control.scale({ position: 'bottomleft', metric: true, imperial: true }).addTo(leafletMap);
-          
           currentTileLayer = L.tileLayer(MAP_STYLES['street'], { maxZoom: 19 }).addTo(leafletMap);
 
-          // Render Kaaba Marker with Custom CSS Tooltip
           L.marker([KAABA_LAT, KAABA_LON], {
             icon: L.divIcon({
               className: 'custom-div-icon',
@@ -494,13 +483,11 @@
 
         leafletMap.invalidateSize();
         
-        // Render Accuracy Circle
         if (accuracyCircle) leafletMap.removeLayer(accuracyCircle);
         accuracyCircle = L.circle([lat, lon], {
           color: '#00ac89', fillColor: '#00ac89', fillOpacity: 0.1, radius: accuracy, weight: 1
         }).addTo(leafletMap);
 
-        // Render User Marker with Dynamic Sensor Cone
         if (userMarker) leafletMap.removeLayer(userMarker);
         userMarker = L.marker([lat, lon], {
           icon: L.divIcon({
@@ -517,35 +504,29 @@
         
         mapHeadingCone = document.getElementById('map-cone');
 
-        // Draw Interactive Qibla Great Circle Line
         if (qiblaPolyline) leafletMap.removeLayer(qiblaPolyline);
         qiblaPolyline = L.polyline([[lat, lon], [KAABA_LAT, KAABA_LON]], {
           color: '#00ac89', weight: 4, dashArray: '10, 10', opacity: 0.8
         }).addTo(leafletMap);
 
         qiblaPolyline.bindTooltip(`Qibla: ${qiblaBearing.toFixed(1)}°`, { permanent: false, sticky: true });
-
         leafletMap.fitBounds(qiblaPolyline.getBounds(), { padding: [60, 60] });
       }
 
-      // Map Style Toggler
       nodes.mapBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
           nodes.mapBtns.forEach(b => b.classList.remove('active'));
           e.target.classList.add('active');
           const style = e.target.getAttribute('data-style');
-          
           if (currentTileLayer) leafletMap.removeLayer(currentTileLayer);
           currentTileLayer = L.tileLayer(MAP_STYLES[style], { maxZoom: 19 }).addTo(leafletMap);
         });
       });
 
-      // Map FAB Interactions
       nodes.fabFullscreen.onclick = () => {
         nodes.mapWrapper.classList.toggle('map-fullscreen');
         nodes.fabFullscreen.innerHTML = nodes.mapWrapper.classList.contains('map-fullscreen') 
-          ? '<i class="ph ph-corners-in"></i>' 
-          : '<i class="ph ph-corners-out"></i>';
+          ? '<i class="ph ph-corners-in"></i>' : '<i class="ph ph-corners-out"></i>';
         setTimeout(() => leafletMap.invalidateSize(), 300);
       };
 
@@ -553,46 +534,57 @@
       nodes.fabUser.onclick = () => leafletMap.flyTo([currentLat, currentLon], 16, { animate: true, duration: 1.5 });
 
       // ======================================================================
-      // 2. MATHEMATICAL TELEMETRY & CONVERSIONS
+      // 2. MATHEMATICAL TELEMETRY & LIVE PRAYER
       // ======================================================================
       
-      // Decimal to DMS Converter
       function toDMS(coordinate, isLat) {
         const absolute = Math.abs(coordinate);
         const degrees = Math.floor(absolute);
-        const minutesNotTruncated = (absolute - degrees) * 60;
-        const minutes = Math.floor(minutesNotTruncated);
-        const seconds = Math.floor((minutesNotTruncated - minutes) * 60);
-        
-        let direction = '';
-        if (isLat) direction = coordinate >= 0 ? "N" : "S";
-        else direction = coordinate >= 0 ? "E" : "W";
-        
+        const minutes = Math.floor((absolute - degrees) * 60);
+        const seconds = Math.floor(((absolute - degrees) * 60 - minutes) * 60);
+        let direction = isLat ? (coordinate >= 0 ? "N" : "S") : (coordinate >= 0 ? "E" : "W");
         return `${degrees}° ${minutes}' ${seconds}" ${direction}`;
+      }
+
+      function updateLivePrayerStatus(lat, lon) {
+        if (typeof window.getGlobalPrayerTimes !== 'function') return;
+        const now = new Date();
+        const prayers = window.getGlobalPrayerTimes(lat, lon, now);
+        if (!prayers || prayers.length === 0) return;
+        
+        let current = prayers[prayers.length - 1]; 
+        let next = prayers[0];
+
+        for (let i = 0; i < prayers.length; i++) {
+            if (prayers[i].time > now) {
+                next = prayers[i];
+                current = i > 0 ? prayers[i - 1] : prayers[prayers.length - 1]; 
+                break;
+            }
+        }
+        
+        const is12h = (localStorage.getItem('timeFormat') || '12h') === '12h';
+        const timeOpts = { hour: '2-digit', minute: '2-digit', hour12: is12h };
+        
+        nodes.valCurrentPrayer.innerHTML = `${current.name} <span class="metric-unit">(${current.time.toLocaleTimeString([], timeOpts)})</span>`;
+        nodes.valNextPrayer.innerHTML = `${next.name} <span class="metric-unit">(${next.time.toLocaleTimeString([], timeOpts)})</span>`;
       }
 
       function calculateQiblaTelemetry(lat, lon, accuracy = 500) {
         currentLat = lat; currentLon = lon;
 
-        // Decimal Update
         nodes.valLatDec.innerHTML = `LAT: <span style="color:var(--text-main)">${lat.toFixed(5)}°</span>`;
         nodes.valLonDec.innerHTML = `LON: <span style="color:var(--text-main)">${lon.toFixed(5)}°</span>`;
-        
-        // DMS Update
         nodes.valLatDms.textContent = toDMS(lat, true);
         nodes.valLonDms.textContent = toDMS(lon, false);
 
-        // Distance Calculation
-        const R = 6371; // km
+        const R = 6371; 
         const dLat = (KAABA_LAT - lat) * Math.PI / 180;
         const dLon = (KAABA_LON - lon) * Math.PI / 180;
         const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat * Math.PI / 180) * Math.cos(KAABA_LAT * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
         const distanceKm = R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
-        
         nodes.valDistKm.innerHTML = `${Math.round(distanceKm).toLocaleString()} <span class="metric-unit">km</span>`;
-        nodes.valDistMi.innerHTML = `${Math.round(distanceKm * 0.621371).toLocaleString()} <span class="metric-unit">mi</span>`;
 
-        // Bearing Calculation
         const phi1 = lat * Math.PI / 180, phi2 = KAABA_LAT * Math.PI / 180;
         const lam1 = lon * Math.PI / 180, lam2 = KAABA_LON * Math.PI / 180;
         const y = Math.sin(lam2 - lam1);
@@ -601,22 +593,20 @@
         qiblaBearing = (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
         nodes.valQibla.innerHTML = `${qiblaBearing.toFixed(1)}<span class="metric-unit">°</span>`;
 
-        // GPS Health Bar Logic
         let healthPct = 100, healthColor = '#00ac89';
         if (accuracy > 100) { healthPct = 70; healthColor = '#f59e0b'; }
         if (accuracy > 1000) { healthPct = 30; healthColor = '#ef4444'; }
-        
         nodes.gpsBar.style.width = `${healthPct}%`;
         nodes.gpsBar.style.background = healthColor;
         nodes.gpsAccText.textContent = `± ${Math.round(accuracy)}m`;
 
-        // Sun Shadow Estimate (Simplified calculation for standard daylight)
-        // Note: Real solar calculation requires complex astronomical algorithms. 
-        // This simulates a time output for UI completeness requested.
+        // Proper Time formatting for Sun Shadow 
+        const is12Hour = (localStorage.getItem('timeFormat') || '12h') === '12h';
         const d = new Date();
-        d.setHours(14, 25, 0); // Placeholder 2:25 PM as an example shadow time
-        nodes.valSunTime.innerHTML = `<i class="ph ph-clock"></i> ${d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+        d.setHours(14, 25, 0); 
+        nodes.valSunTime.innerHTML = `<i class="ph ph-clock"></i> ${d.toLocaleTimeString([], { hour: '2-digit', minute:'2-digit', hour12: is12Hour })}`;
 
+        updateLivePrayerStatus(lat, lon);
         initOrUpdateMap(lat, lon, accuracy);
       }
 
@@ -624,33 +614,33 @@
       // 3. ZERO-LAG DEVICE SENSOR ENGINE (MAP CONE)
       // ======================================================================
       function renderLoop() {
-        // Exponential Moving Average (EMA) for butter-smooth cone rotation
-        const alpha = 0.15; 
+        const alpha = 0.08; // Slower alpha for heavier damping to kill micro-vibrations
         let diff = rawHeading - smoothedHeading;
         
         while (diff < -180) diff += 360;
         while (diff > 180) diff -= 360;
         
+        // Anti-Jitter Deadband filter
+        if (Math.abs(diff) < 0.8) diff = 0; 
+        
         smoothedHeading += alpha * diff;
         smoothedHeading = (smoothedHeading + 360) % 360;
 
-        // Hardware Accelerated Map Cone Rotation
         if (mapHeadingCone) {
           mapHeadingCone.style.transform = `rotate(${smoothedHeading}deg) translateZ(0)`;
           
-          // Color cone green if aligned within 3 degrees
           let deviation = Math.abs(smoothedHeading - qiblaBearing);
           if (deviation > 180) deviation = 360 - deviation;
-          
+          nodes.valDeviation.innerHTML = `${deviation.toFixed(1)}<span class="metric-unit">°</span>`;
+
           if (deviation <= 3) {
-            mapHeadingCone.style.borderBottomColor = 'rgba(0, 172, 137, 0.7)';
+            mapHeadingCone.style.borderBottomColor = 'rgba(0, 172, 137, 0.7)'; // Green
           } else {
-            mapHeadingCone.style.borderBottomColor = 'rgba(239, 68, 68, 0.4)'; // Reddish when off
+            mapHeadingCone.style.borderBottomColor = 'rgba(239, 68, 68, 0.4)'; // Red
           }
         }
 
         nodes.valHeading.innerHTML = `${smoothedHeading.toFixed(1)}<span class="metric-unit">°</span>`;
-
         animationFrameId = requestAnimationFrame(renderLoop);
       }
 
@@ -664,9 +654,9 @@
           
           if (nodes.diagCompass.classList.contains('diag-warn')) {
             nodes.diagCompass.className = "diagnostic-strip diag-ok";
-            nodes.sensorStatus.textContent = "Active (60fps Tracking)";
+            nodes.sensorStatus.textContent = "Active (Jitter-Free Tracking)";
             nodes.diagCompass.querySelector('i').className = "ph-fill ph-check-circle";
-            nodes.fabCalibrate.classList.remove('primary'); // De-emphasize button
+            nodes.fabCalibrate.classList.remove('primary'); 
             if (!animationFrameId) renderLoop();
           }
         }
@@ -695,24 +685,25 @@
       function syncApplicationStateView() {
         const saved = JSON.parse(localStorage.getItem('savedLocation') || '{"lat":30.0167,"lon":30.9833,"name":"El Sheikh Zayed City"}');
         
-        // Fetch High-Precision GPS if running on 'gps' mode in location settings
         if (saved.type === 'gps' && navigator.geolocation) {
           navigator.geolocation.getCurrentPosition((pos) => {
             if (nodes.cityName) nodes.cityName.textContent = "Live GPS Location";
             calculateQiblaTelemetry(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy);
           }, () => {
-             // Fallback
              if (nodes.cityName) nodes.cityName.textContent = saved.name;
              calculateQiblaTelemetry(saved.lat, saved.lon, 1000); 
           }, { enableHighAccuracy: true });
         } else {
           if (nodes.cityName) nodes.cityName.textContent = saved.name;
-          calculateQiblaTelemetry(saved.lat, saved.lon, 0); // 0 accuracy radius for manual cities
+          calculateQiblaTelemetry(saved.lat, saved.lon, 0); 
         }
       }
 
       window.addEventListener('globalLocationChanged', syncApplicationStateView);
       syncApplicationStateView();
+      
+      // Update prayer times every minute
+      setInterval(() => { updateLivePrayerStatus(currentLat, currentLon); }, 60000);
     });
   </script>
 </body>

@@ -8,12 +8,17 @@
   <link rel="stylesheet" href="./src/modern.css" /> 
   <link rel="shortcut icon" href="src/pray.ico" type="image/x-icon">
   
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
   <style>
     /* Premium Qibla Instrumentation System UI */
+    .hidden { display: none !important; }
+
     .qibla-pane-wrapper {
       display: grid;
       grid-template-columns: 1fr 380px;
@@ -21,7 +26,42 @@
       min-height: calc(100vh - 160px);
     }
 
-    /* Primary Compass Alignment Chamber */
+    /* Tabs for View Switching */
+    .view-toggles {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      background: var(--surface-color);
+      padding: 6px;
+      border-radius: 50px;
+      border: 1px solid var(--border-color);
+      width: max-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .view-toggles button {
+      padding: 10px 24px;
+      border-radius: 40px;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .view-toggles button.active {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 172, 137, 0.3);
+    }
+
+    /* Primary Alignment Chamber */
     .compass-display-section {
       background: var(--surface-color);
       border: 1px solid var(--border-color);
@@ -34,6 +74,20 @@
       padding: 40px;
       position: relative;
       overflow: hidden;
+      min-height: 500px;
+    }
+
+    /* Map Specific Container */
+    #map-view-container {
+      padding: 0;
+    }
+    
+    #qibla-map {
+      width: 100%;
+      height: 100%;
+      min-height: 500px;
+      border-radius: var(--radius-lg);
+      z-index: 1;
     }
 
     .alignment-status-banner {
@@ -232,7 +286,7 @@
     .diagnostic-strip.active-ok { color: #00ac89; }
     .diagnostic-strip.active-warn { color: #f59e0b; }
 
-    /* Precision Calibration Calibration Mode Controls */
+    /* Precision Calibration Controls */
     .calibration-action-row {
       display: flex;
       gap: 10px;
@@ -327,42 +381,52 @@
       <!-- Advanced Dual Grid UI Workspace -->
       <div class="qibla-pane-wrapper">
         
-        <!-- Left Processing Pane: High-Precision Dial -->
-        <section class="compass-display-section">
-          <div class="alignment-status-banner" id="alignment-banner">
-            <i class="ph-fill ph-warning-circle"></i> <span id="banner-text">Rotate device to calibrate</span>
+        <!-- Left Processing Pane -->
+        <div>
+          <div class="view-toggles">
+            <button id="tab-compass" class="active"><i class="ph ph-compass"></i> Sensor Compass</button>
+            <button id="tab-map"><i class="ph ph-map-trifold"></i> Global Map</button>
           </div>
 
-          <div class="compass-outer-chassis" id="chassis">
-            <div class="heading-target-crosshair"></div>
-            <div class="center-cap-axis"></div>
-            
-            <!-- Rotating Compass Chassis Ring Face -->
-            <div class="compass-ring-dial" id="compass-face">
-              <div class="ticks-container" id="ticks-mount"></div>
-              <div class="cardinal-pointer cp-n">N</div>
-              <div class="cardinal-pointer cp-e">E</div>
-              <div class="cardinal-pointer cp-s">S</div>
-              <div class="cardinal-pointer cp-w">W</div>
+          <!-- Compass View -->
+          <section class="compass-display-section" id="compass-view-container">
+            <div class="alignment-status-banner" id="alignment-banner">
+              <i class="ph-fill ph-warning-circle"></i> <span id="banner-text">Rotate device to calibrate</span>
             </div>
 
-            <!-- Dynamic Vector Overlay Vector Needle -->
-            <div class="qibla-needle-vector" id="qibla-needle">
-              <div class="needle-pointer-north"></div>
-              <div class="needle-pointer-south"></div>
-            </div>
-          </div>
+            <div class="compass-outer-chassis" id="chassis">
+              <div class="heading-target-crosshair"></div>
+              <div class="center-cap-axis"></div>
+              
+              <div class="compass-ring-dial" id="compass-face">
+                <div class="ticks-container" id="ticks-mount"></div>
+                <div class="cardinal-pointer cp-n">N</div>
+                <div class="cardinal-pointer cp-e">E</div>
+                <div class="cardinal-pointer cp-s">S</div>
+                <div class="cardinal-pointer cp-w">W</div>
+              </div>
 
-          <div class="calibration-action-row">
-            <button class="cal-btn" id="btn-request-gyro"><i class="ph ph-hand-tap"></i> Recalibrate Sensors</button>
-            <button class="cal-btn" id="btn-toggle-audio" style="max-width: 60px;"><i class="ph ph-speaker-simple-high"></i></button>
-          </div>
-        </section>
+              <div class="qibla-needle-vector" id="qibla-needle">
+                <div class="needle-pointer-north"></div>
+                <div class="needle-pointer-south"></div>
+              </div>
+            </div>
+
+            <div class="calibration-action-row">
+              <button class="cal-btn" id="btn-request-gyro"><i class="ph ph-hand-tap"></i> Recalibrate Sensors</button>
+              <button class="cal-btn" id="btn-toggle-audio" style="max-width: 60px;"><i class="ph ph-speaker-simple-high"></i></button>
+            </div>
+          </section>
+
+          <!-- Map View (Leaflet OpenStreetMap) -->
+          <section class="compass-display-section hidden" id="map-view-container">
+            <div id="qibla-map"></div>
+          </section>
+        </div>
 
         <!-- Right Side Analytical Information Columns -->
         <section class="telemetry-sidebar">
           
-          <!-- Instrumentation Grid Coordinates -->
           <div class="telemetry-card">
             <div class="telemetry-header"><i class="ph ph-broadcast"></i> Alignment Metrics</div>
             <div class="metric-grid-metrics">
@@ -385,7 +449,6 @@
             </div>
           </div>
 
-          <!-- Celestial Sensor Telemetry Data Matrix -->
           <div class="telemetry-card">
             <div class="telemetry-header"><i class="ph ph-cpu"></i> Sensor Diagnostics</div>
             <div class="metric-grid-metrics" style="grid-template-columns: 1fr;">
@@ -401,7 +464,6 @@
             </div>
           </div>
 
-          <!-- Position Reference Log Coordinates -->
           <div class="telemetry-card">
             <div class="telemetry-header"><i class="ph ph-globe-hemisphere-west"></i> Position Vector</div>
             <div class="metric-grid-metrics">
@@ -456,7 +518,6 @@
     </div>
   </div>
 
-  <!-- Bottom Mobile Nav Links Panel Grid -->
   <nav class="bottom-nav" id="bottom-nav">
     <a href="index.html" class="nav-link"><i class="fa-solid fa-mosque"></i><span>Pray Time</span></a>
     <a href="quran.html" class="nav-link"><i class="ph ph-book-open-text"></i><span>Quran</span></a>
@@ -465,11 +526,13 @@
     <button class="nav-menu-btn" id="mobile-menu-btn"><i class="ri-menu-4-line"></i><span>Menu</span></button>
   </nav>
 
-  <!-- Script Modules Link Insertion Logic Pipeline -->
+  <!-- Leaflet JS Library for Global Maps Integration -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
   <script src="src/script.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // WGS84 Geodetic coordinates for the Holy Kaaba in Mecca[cite: 4]
+      // WGS84 Geodetic coordinates for the Holy Kaaba in Mecca
       const KAABA_LAT = 21.422487;
       const KAABA_LON = 39.826206;
 
@@ -477,6 +540,13 @@
       let userHeading = 0;
       let audioFeedbackEnabled = true;
       let audioContext = null;
+      let currentLat = 0;
+      let currentLon = 0;
+
+      // Leaflet Map Properties
+      let leafletMap = null;
+      let userMarker = null;
+      let qiblaPolyline = null;
 
       // DOM Elements Mapping Engine
       const nodes = {
@@ -497,16 +567,90 @@
         lblDeviation: document.getElementById('val-deviation'),
         lblLat: document.getElementById('val-lat'),
         lblLon: document.getElementById('val-lon'),
+        diagSensor: document.getElementById('diag-sensor'),
         
-        // Status diagnostics panels
-        diagSensor: document.getElementById('diag-sensor')
+        // Tabs & Views
+        tabCompass: document.getElementById('tab-compass'),
+        tabMap: document.getElementById('tab-map'),
+        viewCompass: document.getElementById('compass-view-container'),
+        viewMap: document.getElementById('map-view-container')
       };
+
+      // --- Tab Switching Logic ---
+      nodes.tabCompass.onclick = () => {
+        nodes.tabCompass.classList.add('active');
+        nodes.tabMap.classList.remove('active');
+        nodes.viewCompass.classList.remove('hidden');
+        nodes.viewMap.classList.add('hidden');
+      };
+
+      nodes.tabMap.onclick = () => {
+        nodes.tabMap.classList.add('active');
+        nodes.tabCompass.classList.remove('active');
+        nodes.viewMap.classList.remove('hidden');
+        nodes.viewCompass.classList.add('hidden');
+        
+        // Initialize Map or Update Size if hidden initially
+        initOrUpdateMap();
+      };
+
+      // --- Leaflet OSM Map Engine ---
+      function initOrUpdateMap() {
+        if (!leafletMap) {
+          // Initialize map utilizing CARTO's Voyager tile styles for modern aesthetic
+          leafletMap = L.map('qibla-map').setView([currentLat, currentLon], 4);
+          
+          L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 20
+          }).addTo(leafletMap);
+
+          // Render Kaaba Marker
+          L.marker([KAABA_LAT, KAABA_LON], {
+            icon: L.divIcon({
+              className: 'custom-div-icon',
+              html: `<div style="background:var(--text-main); color:var(--bg-color); width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid var(--border-color); box-shadow:0 4px 8px rgba(0,0,0,0.3);"><i class="fa-solid fa-kaaba"></i></div>`,
+              iconSize: [28, 28],
+              iconAnchor: [14, 14]
+            })
+          }).addTo(leafletMap).bindPopup('<b>The Holy Kaaba</b><br>Mecca, Saudi Arabia');
+        }
+
+        // Must invalidate size due to map loading inside a display:none container
+        setTimeout(() => {
+          leafletMap.invalidateSize();
+          
+          // Update User Location Marker
+          if (userMarker) leafletMap.removeLayer(userMarker);
+          userMarker = L.marker([currentLat, currentLon], {
+            icon: L.divIcon({
+              className: 'custom-div-icon',
+              html: `<div style="background:var(--accent); color:white; width:16px; height:16px; border-radius:50%; border:3px solid white; box-shadow:0 0 10px rgba(0,172,137,0.8);"></div>`,
+              iconSize: [16, 16],
+              iconAnchor: [8, 8]
+            })
+          }).addTo(leafletMap).bindPopup('<b>Your Location</b>');
+
+          // Draw Qibla Direction Line Matrix
+          if (qiblaPolyline) leafletMap.removeLayer(qiblaPolyline);
+          qiblaPolyline = L.polyline([[currentLat, currentLon], [KAABA_LAT, KAABA_LON]], {
+            color: '#00ac89',
+            weight: 3,
+            dashArray: '6, 8',
+            opacity: 0.8
+          }).addTo(leafletMap);
+
+          // Fit bounds dynamically to see both point coordinates
+          leafletMap.fitBounds(qiblaPolyline.getBounds(), { padding: [50, 50] });
+        }, 100);
+      }
 
       // Generate precise mathematical ticks markers around dial plate face perimeter
       function generateCompassTicks() {
         nodes.ticksMount.innerHTML = '';
         for (let i = 0; i < 360; i += 5) {
-          if (i % 30 === 0) continue; // Skip numbers alignment spacing rules
+          if (i % 30 === 0) continue; 
           const tick = document.createElement('div');
           tick.style.position = 'absolute';
           tick.style.width = '2px';
@@ -523,11 +667,14 @@
 
       // Compute geometric bearing distance algorithms mapping equations matrix formulas
       function calculateQiblaTelemetry(lat, lon) {
+        currentLat = lat;
+        currentLon = lon;
+
         nodes.lblLat.textContent = `${lat.toFixed(4)}°`;
         nodes.lblLon.textContent = `${lon.toFixed(4)}°`;
 
         // Haversine metrics distance tracker algorithm pipeline
-        const R = 6371; // Earth Mean Radius metric variable parameter
+        const R = 6371; 
         const dLat = (KAABA_LAT - lat) * Math.PI / 180;
         const dLon = (KAABA_LON - lon) * Math.PI / 180;
         const a = 
@@ -551,24 +698,23 @@
         nodes.lblQibla.textContent = `${qiblaBearing.toFixed(2)}°`;
         
         updateCompassVisuals();
+
+        // Ensure Leaflet map is updated live if the map tab is active
+        if (nodes.tabMap.classList.contains('active')) {
+          initOrUpdateMap();
+        }
       }
 
       // Dynamic view transitions mapping computations frame loops
       function updateCompassVisuals() {
-        // Rotate chassis ring face mapping heading indicators coordinates inverted parameter
         nodes.compassFace.style.transform = `rotate(${-userHeading}deg)`;
-        
-        // Render alignment angle offset values vector rotation relative matrix pointers
         nodes.qiblaNeedle.style.transform = `rotate(${qiblaBearing - userHeading}deg)`;
-
         nodes.lblHeading.textContent = `${userHeading.toFixed(2)}°`;
 
-        // Calculate absolute drift error boundary deviation limits thresholds metrics values
         let deviation = Math.abs(userHeading - qiblaBearing);
         if (deviation > 180) deviation = 360 - deviation;
         nodes.lblDeviation.textContent = `${deviation.toFixed(2)}°`;
 
-        // Process lock notification thresholds boundaries system adaptations limits triggers
         if (deviation <= 2.5) {
           nodes.banner.className = "alignment-status-banner aligned";
           nodes.bannerText.textContent = "Aligned with Qibla (Facing Mecca)";
@@ -583,12 +729,12 @@
 
       // High performance raw device absolute heading sensor pipeline hook loops
       function handleOrientationMatrix(e) {
-        let heading = e.alpha; // Default fallback parameter variable values loop indicators
+        let heading = e.alpha; 
         
         if (e.webkitCompassHeading) {
-          heading = e.webkitCompassHeading; // Native high performance absolute hardware layer injection hook for iOS devices
+          heading = e.webkitCompassHeading; 
         } else if (e.absolute === true && e.alpha !== null) {
-          heading = 360 - e.alpha; // Magnetic absolute frame adjustment for standard compliant Android systems architectures
+          heading = 360 - e.alpha; 
         }
 
         if (heading !== undefined && heading !== null) {
@@ -615,10 +761,9 @@
           const gain = audioContext.createGain();
           
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(880, audioContext.currentTime); // High pitch notification click clear beep note sounds
-          
+          osc.frequency.setValueAtTime(880, audioContext.currentTime); 
           gain.gain.setValueAtTime(0.08, audioContext.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.15); // Short millisecond click sequence interval duration window
+          gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.15); 
           
           osc.connect(gain);
           gain.connect(audioContext.destination);
@@ -635,7 +780,6 @@
         }
 
         if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-          // Special iOS permission loop sequence handler logic parameter requirements
           try {
             const permissionState = await DeviceOrientationEvent.requestPermission();
             if (permissionState === 'granted') {
@@ -648,13 +792,11 @@
             console.error(e);
           }
         } else {
-          // Standard structural fallback insertion parameters logic
           window.addEventListener('deviceorientationabsolute', handleOrientationMatrix, true);
           window.addEventListener('deviceorientation', handleOrientationMatrix, true);
         }
       }
 
-      // Audio Toggle controller switches state system modifiers parameters mapping routines
       nodes.btnAudio.onclick = () => {
         audioFeedbackEnabled = !audioFeedbackEnabled;
         nodes.btnAudio.querySelector('i').className = audioFeedbackEnabled ? "ph ph-speaker-simple-high" : "ph ph-speaker-simple-x";
@@ -667,7 +809,7 @@
 
       // Configuration synchronization runtime hooks mappings pipelines bindings loops
       function syncApplicationStateView() {
-        const saved = JSON.parse(localStorage.getItem('savedLocation') || '{"lat":30.0167,"lon":30.9833,"name":"El Sheikh Zayed City"}'); // Default coordinates fallbacks templates parameters mapping values inside global databases
+        const saved = JSON.parse(localStorage.getItem('savedLocation') || '{"lat":30.0167,"lon":30.9833,"name":"El Sheikh Zayed City"}');
         if (nodes.cityName) nodes.cityName.textContent = saved.name;
         calculateQiblaTelemetry(saved.lat, saved.lon);
       }

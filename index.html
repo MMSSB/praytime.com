@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>PrayTime Dashboard</title>
+  
+  <link rel="stylesheet" href="./src/modern.css" /> 
+  <link rel="shortcut icon" href="src/pray.ico" type="image/x-icon">
+  <!-- Font Awesome Pro Core & Standard Styles -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/brands.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/duotone.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/fontawesome.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/light.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/solid.css" />
+
+<!-- Sharp Styles -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/sharp-duotone-solid.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/sharp-light.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/sharp-regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/sharp-solid.css" />
+
+<!-- Special Pro+ Variants -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/chisel-regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/etch-solid.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/graphite-thin.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/jelly-regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/notdog-solid.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/slab-regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/thumbprint-light.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/utility-semibold.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/whiteboard-semibold.css" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+<body>
+  <script>
+    (function() {
+      // Read stored theme or default to 'system'
+      const theme = localStorage.getItem('theme') || 'system';
+      
+      // Apply class based on theme setting
+      if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.body.classList.add('dark');
+      } else if (theme === 'light') {
+        document.body.classList.add('light');
+      }
+    })();
+  </script>
+
+  <!-- rest of your page -->
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="logo">
+        <img src="./src/pray.png" alt="Islamic App" class="logo-icon">
+        <h2>PrayTime</h2>
+      </div>
+      <nav class="side-nav" id="main-nav">
+        <a href="index.html" class="nav-link"><i class="fa-solid fa-mosque"></i> Pray Time</a>
+        <a href="weather.html" class="nav-link"><i class="ph ph-cloud-sun"></i> Weather</a>
+        <a href="quran.html" class="nav-link"><i class="ph ph-book-open-text"></i> Quran</a>
+                   <a href="q-audio.html" class="nav-link "><i class="ph ph-disc"></i><span>Audio</span></a>
+
+                <a href="masjid-finder.html" class="nav-link"><i class="ph ph-map-pin"></i> Masjid Finder</a>
+        <a href="settings.html" class="nav-link"><i class="ph ph-gear"></i> Settings</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="top-header">
+        <div>
+          <h1>Prayer Times</h1>
+          <br>
+          <p class="date" id="current-date">Loading date...</p>
+        </div>
+        
+        <div class="location-pill" id="location-display">
+          <i class="ri-map-pin-2-fill"></i>
+          <span id="city-name">Loading...</span>
+          <button id="edit-location-btn" class="icon-btn"><i class="ri-pencil-line"></i></button>
+        </div>
+      </header>
+
+      <div class="hero-widget">
+        <div class="hero-content">
+          <div class="time" id="current-time">--:--:--</div>
+          <div class="date-details" id="date-details">Loading...</div>
+          <div class="islamic-date" id="islamic-date">Loading...</div>
+        </div>
+      </div>
+
+      <section class="prayer-section">
+        <div class="section-header">
+          <h2><i class="ph ph-clock"></i> Prayer Times</h2>
+          <div class="modern-tabs">
+            <button id="show-today" class="active">Today</button>
+            <button id="show-tomorrow">Tomorrow</button>
+          </div>
+        </div>
+      
+        <div class="times-container">
+          <ul id="times-today" class="prayer-grid" style="display: grid;"></ul>
+          <ul id="times-tomorrow" class="prayer-grid" style="display: none;"></ul>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+
+  <div class="location-modal" id="location-modal">
+    <div class="drag-handle"></div>
+    <div class="modal-header">
+      <h3>Select Location</h3>
+      <button id="close-search-btn" class="icon-btn"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="search-input-group">
+      <i class="ri-search-line search-icon"></i>
+      <input type="text" id="city-search-input" placeholder="Search city or country...">
+    </div>
+    <ul id="search-results" class="search-results"></ul>
+    <button id="use-gps-btn" class="gps-btn"><i class="ri-gps-line"></i> Use Current Location</button>
+  </div>
+
+  <div class="mobile-nav-sheet" id="mobile-nav-sheet">
+    <div class="drag-handle"></div>
+    <div class="modal-header">
+      <h3 style="font-weight: 700;">Menu</h3>
+      <button id="close-menu-btn" class="icon-btn"><i class="ri-close-line"></i></button>
+    </div>
+    
+    <div class="sheet-links">
+      <a href="index.html" class="nav-link active"><i class="fa-solid fa-mosque"></i> Pray Time</a>
+      <a href="weather.html" class="nav-link"><i class="ph ph-cloud-sun"></i> Weather</a>
+      <a href="quran.html" class="nav-link"><i class="ph ph-book-open-text"></i> Quran</a>
+      <a href="q-audio.html" class="nav-link "><i class="ph ph-disc"></i><span>Audio</span></a>
+      <a href="masjid-finder.html" class="nav-link"><i class="ph ph-map-pin"></i> Masjid Finder</a>
+      <a href="settings.html" class="nav-link"><i class="ph ph-gear"></i> Settings</a>
+    </div>
+  </div>
+
+  <nav class="bottom-nav" id="bottom-nav">
+    <a href="index.html" class="nav-link active"><i class="fa-solid fa-mosque"></i><span>Pray Time</span></a>
+    <!-- <a href="weather.html" class="nav-link"><i class="ph ph-cloud-sun"></i><span>Weather</span></a> -->
+    <a href="quran.html" class="nav-link active"><i class="ph ph-book-open-text"></i><span>Quran</span></a>
+
+    <a href="masjid-finder.html" class="nav-link"><i class="ph ph-map-pin"></i><span>Masjid Finder</span></a>
+    <button class="nav-menu-btn" id="mobile-menu-btn">
+      <i class="ri-menu-4-line"></i><span>Menu</span>
+    </button>
+  </nav>
+
+  <script src="src/adhan.js"></script>
+  <script src="src/script.js"></script> 
+  <script src="src/app.js"></script> 
+</body>
+</html>

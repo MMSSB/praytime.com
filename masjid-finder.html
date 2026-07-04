@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Masjid Finder - PrayTime</title>
+  
+  <link rel="stylesheet" href="./src/modern.css" /> 
+  <link rel="shortcut icon" href="src/pray.ico" type="image/x-icon">
+  <!-- Font Awesome Pro Core & Standard Styles -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/brands.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/duotone.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/fontawesome.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/light.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/solid.css" />
+
+<!-- Sharp Styles -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/sharp-duotone-solid.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/sharp-light.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/sharp-regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/sharp-solid.css" />
+
+<!-- Special Pro+ Variants -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/chisel-regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/etch-solid.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/graphite-thin.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/jelly-regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/notdog-solid.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/slab-regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/thumbprint-light.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/utility-semibold.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/whiteboard-semibold.css" />
+
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    /* Premium Dual-Pane Layout Styles */
+    .finder-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+      height: calc(100vh - 160px);
+      min-height: 500px;
+    }
+
+    /* Interactive Map Left Panel */
+    .map-section {
+      position: relative;
+      background-color: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .map-frame-container {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .map-frame-container iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* Floating Action System over Map */
+    .map-fab {
+      position: absolute;
+      bottom: 72px;
+      right: 5px;
+      background: var(--text-main);
+      color: var(--bg-color);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      z-index: 10;
+      font-size: 1.2rem;
+    }
+
+    .map-fab:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+
+    .map-fab-top {
+      bottom: 130px;
+      background: var(--surface-color);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    /* Nearby Sidebar Scroll Area Right Panel */
+    .list-section {
+      background-color: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .list-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .list-header h2 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+    }
+
+    .list-scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      scrollbar-width: thin;
+    }
+
+    /* Modern Minimalist Mosque Cards */
+    .mosque-card {
+      background: var(--bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .mosque-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+
+    .mosque-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+
+    .mosque-meta {
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+      margin-bottom: 14px;
+    }
+
+    .mosque-distance {
+      color: var(--accent);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-directions {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      background: var(--text-main);
+      color: var(--bg-color);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .btn-directions:hover { opacity: 0.9; }
+
+    /* Responsive Handlers */
+    @media screen and (max-width: 900px) {
+      .finder-wrapper {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+      .map-section {
+        height: 350px;
+      }
+      .list-section {
+        height: 450px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    (function() {
+      const theme = localStorage.getItem('theme') || 'system';
+      if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.body.classList.add('dark');
+      else if (theme === 'light') document.body.classList.add('light');
+    })();
+  </script>
+
+  <div class="app">
+    <!-- Sidebar Left Layout Column -->
+    <aside class="sidebar" id="sidebar">
+      <div class="logo">
+        <img src="./src/masjid.png" alt="Islamic App" class="logo-icon">
+        <h2>Masjid Finder</h2>
+      </div>
+      <nav class="side-nav" id="main-nav">
+        <a href="index.html" class="nav-link"><i class="fa-solid fa-mosque"></i> Pray Time</a>
+        <a href="weather.html" class="nav-link"><i class="ph ph-cloud-sun"></i> Weather</a>
+        <a href="quran.html" class="nav-link"><i class="ph ph-book-open-text"></i> Quran</a>
+<a href="q-audio.html" class="nav-link "><i class="ph ph-disc"></i><span>Audio</span></a>
+        <a href="masjid-finder.html" class="nav-link active"><i class="ph-fill ph-map-pin"></i> Masjid Finder</a>
+        <a href="settings.html" class="nav-link"><i class="ph ph-gear"></i> Settings</a>
+      </nav>
+    </aside>
+
+    <!-- Center Main View -->
+    <main class="main-content">
+      <header class="top-header">
+        <div>
+          <h1>Masjid Finder</h1>
+          <br>
+          <p class="date" id="current-date">Loading date...</p>
+        </div>
+        
+        <!-- Interactive Global Search Pill Link -->
+        <div class="location-pill trigger-location" id="location-display">
+          <i class="ph-fill ph-navigation-arrow"></i>
+          <span id="city-name">Loading...</span>
+          <button class="icon-btn" style="pointer-events: none;"><i class="ph ph-pencil-simple"></i></button>
+        </div>
+      </header>
+
+      <!-- Grid Content Wrap -->
+      <div class="finder-wrapper">
+        
+        <!-- Left Column: Iframe Embedded Map -->
+        <section class="map-section">
+          <div class="map-frame-container">
+            <iframe 
+              id="google-maps-iframe"
+              src="about:blank"
+              allowfullscreen="" 
+              loading="lazy" 
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+            
+            <a href="#" id="view-large-btn" target="_blank" class="map-fab map-fab-top" title="Open in Google Maps">
+              <i class="ph ph-arrow-square-out"></i>
+            </a>
+            <button id="recenter-btn" class="map-fab" title="Recenter to Current Location">
+              <i class="ph ph-crosshair"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- Right Column: API Rendered Mosque Cards -->
+        <section class="list-section">
+          <div class="list-header">
+            <h2>Nearby Masjids</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500; margin-top: 2px;">Real-time search within a 5km radius</p>
+          </div>
+          
+          <div class="list-scroll-area" id="mosque-list-container">
+            <!-- Spinner item generated dynamically -->
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Shared Backdrop and Floating Sheets Overlays -->
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+
+  <!-- Unified Search Overlay Dropdown Container -->
+  <div class="location-modal" id="location-modal">
+    <div class="drag-handle"></div>
+    <div class="modal-header">
+      <h3>Select Location</h3>
+      <button id="close-search-btn" class="icon-btn"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="search-input-group">
+      <i class="ri-search-line search-icon"></i>
+      <input type="text" id="city-search-input" placeholder="Search city or country...">
+    </div>
+    <ul id="search-results" class="search-results"></ul>
+    <button id="use-gps-btn" class="gps-btn"><i class="ri-gps-line"></i> Use Current Location</button>
+  </div>
+
+  <!-- Mobile Bottom Menu Sheets -->
+  <div class="mobile-nav-sheet" id="mobile-nav-sheet">
+    <div class="drag-handle"></div>
+    <div class="modal-header">
+      <h3 style="font-weight: 700;">Menu</h3>
+      <button id="close-menu-btn" class="icon-btn"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="sheet-links">
+      <a href="index.html" class="nav-link"><i class="fa-solid fa-mosque"></i> Pray Time</a>
+      <a href="weather.html" class="nav-link"><i class="ph ph-cloud-sun"></i> Weather</a>
+      <a href="quran.html" class="nav-link"><i class="ph ph-book-open-text"></i> Quran</a>
+      <a href="q-audio.html" class="nav-link "><i class="ph ph-disc"></i><span>Audio</span></a>
+      <a href="masjid-finder.html" class="nav-link active"><i class="ph-fill ph-map-pin"></i> Masjid Finder</a>
+      <a href="settings.html" class="nav-link"><i class="ph ph-gear"></i> Settings</a>
+    </div>
+  </div>
+
+  <!-- Mobile Responsive Bottom Layout Nav Bar -->
+  <nav class="bottom-nav" id="bottom-nav">
+    <a href="index.html" class="nav-link"><i class="fa-solid fa-mosque"></i><span>Pray Time</span></a>
+    <!-- <a href="weather.html" class="nav-link"><i class="ph ph-cloud-sun"></i><span>Weather</span></a> -->
+     <a href="quran.html" class="nav-link active"><i class="ph ph-book-open-text"></i><span>Quran</span></a>
+    <a href="masjid-finder.html" class="nav-link active"><i class="ph-fill ph-map-pin"></i><span>Masjid Finder</span></a>
+    <button class="nav-menu-btn" id="mobile-menu-btn"><i class="ri-menu-4-line"></i><span>Menu</span></button>
+  </nav>
+
+  <script src="src/script.js"></script>
+  <script src="src/masjid.js"></script>
+</body>
+</html>

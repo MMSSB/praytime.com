@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Settings - PrayTime</title>
+  
+  <link rel="stylesheet" href="./src/modern.css" /> 
+  <link rel="shortcut icon" href="src/pray.ico" type="image/x-icon">
+  <!-- Font Awesome Pro Core & Standard Styles -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/brands.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/duotone.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/fontawesome.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/light.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/solid.css" />
+
+<!-- Sharp Styles -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/sharp-duotone-solid.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/sharp-light.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/sharp-regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/sharp-solid.css" />
+
+<!-- Special Pro+ Variants -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/chisel-regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/etch-solid.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/graphite-thin.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/jelly-regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/notdog-solid.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/slab-regular.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/thumbprint-light.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/utility-semibold.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rizmyabdulla/fontawesome-pro@main/releases/v7.2.0/css/whiteboard-semibold.css" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    /* Premium UI Settings Styles */
+    .settings-section { margin-bottom: 32px; }
+    
+    .settings-list {
+      background: var(--surface-color);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-soft);
+      padding: 0 20px;
+      list-style: none;
+    }
+    
+    .settings-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .settings-item:last-child { border-bottom: none; }
+    
+    .settings-meta { display: flex; align-items: center; gap: 12px; }
+    .settings-meta i { font-size: 1.4rem; color: var(--text-muted); width: 24px; text-align: center; }
+    .settings-title { font-weight: 600; font-size: 1rem; color: var(--text-main); }
+    
+    /* Truncated modern select boxes */
+    .settings-select {
+      padding: 10px 35px 10px 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background: var(--bg-color);
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 0.95rem;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%238e8e93%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 12px;
+      
+      /* Mobile Truncation logic */
+      max-width: 180px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media (max-width: 450px) {
+      .settings-select { max-width: 140px; }
+      .settings-title { font-size: 0.95rem; }
+    }
+
+    /* Core Location Card - Brand New UI */
+    .location-card {
+      background: var(--surface-color);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-soft);
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    
+    .location-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+
+    .loc-content { display: flex; align-items: center; gap: 16px; }
+    .loc-icon-wrapper {
+      width: 48px; height: 48px;
+      background: var(--bg-color);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--accent);
+      font-size: 1.5rem;
+    }
+    .loc-text h4 { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .loc-text p { font-size: 1.2rem; font-weight: 700; color: var(--text-main); }
+    
+    .loc-action-btn {
+      background: var(--bg-color); color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 10px 16px; border-radius: 50px;
+      font-weight: 600; font-size: 0.9rem;
+      display: flex; align-items: center; gap: 6px; pointer-events: none;
+    }
+
+    .about-box { text-align: center; padding: 30px 20px; }
+    .about-logo {
+      width: 70px; height: 70px;
+      background: var(--bg-color); border-radius: var(--radius-md);
+      display: inline-flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border-color); margin-bottom: 15px;
+    }
+    .badge { background: var(--accent); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <script>
+    (function() {
+      const theme = localStorage.getItem('theme') || 'system';
+      if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.body.classList.add('dark');
+      else if (theme === 'light') document.body.classList.add('light');
+    })();
+  </script>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="logo">
+        <img src="./src/pray.png" alt="Islamic App" class="logo-icon">
+        <h2>PrayTime</h2>
+      </div>
+      <nav class="side-nav" id="main-nav">
+        <a href="index.html" class="nav-link"><i class="fa-solid fa-mosque"></i> Pray Time</a>
+        <a href="weather.html" class="nav-link"><i class="ph ph-cloud-sun"></i> Weather</a>
+        <a href="quran.html" class="nav-link"><i class="ph ph-book-open-text"></i> Quran</a>
+                   <a href="q-audio.html" class="nav-link "><i class="ph ph-disc"></i><span>Audio</span></a>
+
+                <a href="masjid-finder.html" class="nav-link"><i class="ph ph-map-pin"></i> Masjid Finder</a>
+        <a href="settings.html" class="nav-link active"><i class="ph-fill ph-gear"></i> Settings</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="top-header">
+        <div>
+          <h1>Settings</h1><br>
+          <p class="date" id="current-date">Loading date...</p>
+        </div>
+      </header>
+
+      <!-- Location Card Section -->
+      <section class="settings-section">
+        <div class="section-header"><h2><i class="ph ph-map-pin"></i> Core Location</h2></div>
+        
+        <div class="location-card trigger-location" id="location-display">
+          <div class="loc-content">
+            <div class="loc-icon-wrapper"><i class="ph-fill ph-navigation-arrow"></i></div>
+            <div class="loc-text">
+              <h4>Active Location</h4>
+              <p id="settings-city-val">Loading...</p>
+            </div>
+          </div>
+          <button class="loc-action-btn"><i class="ph ph-pencil-simple"></i> Edit</button>
+        </div>
+      </section>
+
+      <!-- Preferences -->
+      <section class="settings-section">
+        <div class="section-header"><h2><i class="ph ph-sliders"></i> Preferences</h2></div>
+        <ul class="settings-list">
+          <li class="settings-item">
+            <div class="settings-meta"><i class="ph ph-palette"></i><span class="settings-title">App Theme</span></div>
+            <select id="theme-select" class="settings-select">
+              <option value="light">Light Mode</option>
+              <option value="dark">Dark Mode</option>
+              <option value="system">System Default</option>
+            </select>
+          </li>
+          <li class="settings-item">
+            <div class="settings-meta"><i class="ph ph-clock"></i><span class="settings-title">Time Format</span></div>
+            <select id="time-format" class="settings-select">
+              <option value="12h">12-Hour (AM/PM)</option>
+              <option value="24h">24-Hour</option>
+            </select>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Calculations -->
+      <section class="settings-section">
+        <div class="section-header"><h2><i class="ph ph-calculator"></i> Calculations</h2></div>
+        <ul class="settings-list">
+          <li class="settings-item">
+            <div class="settings-meta"><i class="ph ph-globe"></i><span class="settings-title">Method</span></div>
+            <select id="calc-method" class="settings-select">
+              <option value="Egyptian">Egyptian General Authority</option>
+              <option value="MuslimWorldLeague">Muslim World League</option>
+              <option value="ISNA">ISNA (North America)</option>
+              <option value="Mecca">Umm Al-Qura (Mecca)</option>
+              <option value="Karachi">University of Islamic Sciences</option>
+            </select>
+          </li>
+          <li class="settings-item">
+            <div class="settings-meta"><i class="ph ph-gavel"></i><span class="settings-title">Asr Juristic</span></div>
+            <select id="asr-method" class="settings-select">
+              <option value="Shafi">Standard (Shafi/Maliki/Hanbali)</option>
+              <option value="Hanafi">Hanafi</option>
+            </select>
+          </li>
+        </ul>
+      </section>
+
+      <!-- About -->
+      <section class="hero-widget about-box">
+        <div class="about-logo"><img src="./src/pray.png"  style="width: 70px; height: 70px;" alt="Logo"></div>
+        <h3 style="font-size:1.5rem; font-weight:800;">PrayTime</h3>
+        <br>
+        <p><span class="badge">v3.0</span></p>
+        <p style="color:var(--text-muted); max-width:400px; margin:10px auto; font-size:0.95rem; line-height:1.5;">
+          PrayTime is a lightweight web application designed to help Muslims track prayer times accurately while staying updated with the weather.
+        </p>
+        <a href="https://mmssb.github.io/praytime.com" target="_blank" style="margin-top:10px; display:inline-flex; align-items:center; gap:8px; font-weight:600; color:var(--text-main); background:var(--bg-color); padding:8px 16px; border-radius:8px; border: 1px solid var(--border-color);">
+          <i class="ri-github-fill"></i> Github
+        </a>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+
+  <!-- Identical Global Search Modal Setup -->
+  <div class="location-modal" id="location-modal">
+    <div class="drag-handle"></div>
+    <div class="modal-header">
+      <h3>Select Location</h3>
+      <button id="close-search-btn" class="icon-btn"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="search-input-group">
+      <i class="ri-search-line search-icon"></i>
+      <input type="text" id="city-search-input" placeholder="Search city or country...">
+    </div>
+    <!-- CSS handles robust search suggestion lists -->
+    <ul id="search-results" class="search-results" style="max-height: 250px; overflow-y: auto; list-style: none;"></ul>
+    <button id="use-gps-btn" class="gps-btn" style="width: 100%; padding: 14px; border-radius: 12px; border: none; background: var(--text-main); color: var(--bg-color); font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 15px;"><i class="ri-gps-line"></i> Use Current Location</button>
+  </div>
+
+  <!-- Mobile Menus -->
+  <div class="mobile-nav-sheet" id="mobile-nav-sheet">
+    <div class="drag-handle"></div>
+    <div class="modal-header"><h3 style="font-weight:700;">Menu</h3><button id="close-menu-btn" class="icon-btn"><i class="ri-close-line"></i></button></div>
+    <div class="sheet-links">
+      <a href="index.html" class="nav-link"><i class="fa-solid fa-mosque"></i> Pray Time</a>
+      <a href="weather.html" class="nav-link"><i class="ph ph-cloud-sun"></i> Weather</a>
+      <a href="quran.html" class="nav-link"><i class="ph ph-book-open-text"></i> Quran</a>
+      <a href="q-audio.html" class="nav-link "><i class="ph ph-disc"></i><span>Audio</span></a>
+      <a href="masjid-finder.html" class="nav-link"><i class="ph ph-map-pin"></i> Masjid Finder</a>
+      <a href="settings.html" class="nav-link active"><i class="ph-fill ph-gear"></i> Settings</a>
+    </div>
+  </div>
+
+  <nav class="bottom-nav" id="bottom-nav">
+    <a href="index.html" class="nav-link"><i class="fa-solid fa-mosque"></i><span>Pray Time</span></a>
+    <!-- <a href="weather.html" class="nav-link"><i class="ph ph-cloud-sun"></i><span>Weather</span></a> -->
+   <a href="quran.html" class="nav-link active"><i class="ph ph-book-open-text"></i><span>Quran</span></a>
+    <a href="masjid-finder.html" class="nav-link"><i class="ph ph-map-pin"></i><span>Masjid Finder</span></a>
+    <button class="nav-menu-btn" id="mobile-menu-btn"><i class="ri-menu-4-line"></i><span>Menu</span></button>
+  </nav>
+
+  <script src="src/script.js"></script> 
+  <script src="src/settings.js"></script> 
+</body>
+</html>

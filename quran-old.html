@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Quran - PrayTime</title>
+  
+  <link rel="stylesheet" href="./src/modern.css" /> 
+  <link rel="shortcut icon" href="src/pray.ico" type="image/x-icon">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    /* CRITICAL FIX */
+    .hidden { display: none !important; }
+
+    /* Quran Specific UI */
+    .quran-header-area {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    /* Continue Reading Widget */
+    .last-read-widget {
+      background: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-soft);
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .last-read-widget:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+    .lr-info { display: flex; align-items: center; gap: 16px; }
+    .lr-icon {
+      width: 50px; height: 50px;
+      background: var(--bg-color);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--accent); font-size: 1.6rem;
+    }
+    .lr-text p { color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
+    .lr-text h3 { color: var(--text-main); font-size: 1.3rem; font-weight: 800; }
+    
+    /* Search Bar */
+    .search-input-group { margin-bottom: 0; width: 100%; max-width: 500px; }
+
+    /* Surah Grid */
+    .surah-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+      padding-bottom: 40px;
+    }
+    .surah-card {
+      background-color: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      box-shadow: var(--shadow-soft);
+    }
+    .surah-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+    .surah-number {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background-color: var(--bg-color);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: var(--text-muted);
+      border: 1px solid var(--border-color);
+      transition: 0.2s;
+    }
+    .surah-card:hover .surah-number { background-color: var(--accent); color: var(--inverted-text); border-color: var(--accent); }
+    .surah-name-en { font-weight: 700; color: var(--text-main); font-size: 1.05rem; margin-bottom: 4px; }
+    .surah-details { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+    .surah-name-ar { font-family: 'Amiri Quran', serif; font-size: 1.5rem; color: var(--accent); }
+
+    /* Reader View */
+    .reader-header {
+      position: sticky;
+      top: 0;
+      background: var(--surface-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 50;
+      padding: 16px 20px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .r-btn {
+      background: var(--bg-color);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 10px 16px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: 600;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .r-btn:hover { background: var(--text-main); color: var(--bg-color); }
+    .r-btn.active { background: var(--accent); color: var(--inverted-text); border-color: var(--accent); }
+
+    .reader-title { text-align: center; }
+    .reader-title h2 { color: var(--accent); font-family: 'Amiri Quran', serif; font-size: 2rem; margin-bottom: 0; }
+    .reader-title span { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
+
+    .reader-tools { display: flex; gap: 8px; }
+    .font-controls { display: flex; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; }
+    .font-controls button { background: none; border: none; padding: 10px 16px; cursor: pointer; color: var(--text-main); font-size: 1.1rem; transition: 0.2s; }
+    .font-controls button:hover { background: var(--border-color); }
+
+    .ayahs-container-card {
+      background-color: var(--surface-color);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      box-shadow: var(--shadow-soft);
+      min-height: 60vh;
+      margin-bottom: 40px;
+    }
+    .bismillah { text-align: center; font-family: 'Amiri Quran', serif; font-size: 2.5rem; margin-bottom: 40px; color: var(--text-main); }
+    
+    .ayah-block {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .ayah-block:last-child { border-bottom: none; }
+
+    .ayah-ar {
+      font-family: 'Amiri Quran', serif;
+      direction: rtl; text-align: right;
+      line-height: 2.2;
+      color: var(--text-main);
+      font-size: calc(2rem * var(--ayah-multiplier, 1));
+      transition: font-size 0.3s ease;
+    }
+    .ayah-en {
+      font-size: calc(1.05rem * var(--ayah-multiplier, 1));
+      color: var(--text-muted);
+      line-height: 1.6;
+      font-weight: 500;
+      text-align: left;
+    }
+
+    .ayah-marker {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='none' stroke='%2300ac89' stroke-width='4' d='M50 5 L60 25 L80 20 L75 40 L95 50 L75 60 L80 80 L60 75 L50 95 L40 75 L20 80 L25 60 L5 50 L25 40 L20 20 L40 25 Z'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%2300ac89' stroke-width='2'/%3E%3C/svg%3E");
+      background-size: cover; background-position: center;
+      font-family: 'Inter', sans-serif; font-size: 0.9rem;
+      margin: 0 10px; color: var(--accent); vertical-align: middle; transform: translateY(-5px);
+    }
+
+    .bottom-reader-nav {
+      display: flex; justify-content: space-between; gap: 16px;
+    }
+
+    /* Loader */
+    .quran-loader { text-align: center; padding: 80px 20px; color: var(--text-main); display: flex; flex-direction: column; align-items: center; gap: 16px; }
+
+    @media (max-width: 900px) {
+      .reader-header { flex-wrap: wrap; gap: 16px; justify-content: center; padding: 12px; }
+      .reader-tools { width: 100%; justify-content: space-between; }
+      .ayahs-container-card { padding: 20px; }
+      .ayah-marker { width: 32px; height: 32px; font-size: 0.75rem; }
+      .last-read-widget { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .lr-action { width: 100%; }
+      .lr-action .r-btn { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    (function() {
+      const theme = localStorage.getItem('theme') || 'system';
+      if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.body.classList.add('dark');
+      else if (theme === 'light') document.body.classList.add('light');
+    })();
+  </script>
+
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="logo">
+        <img src="./src/pray.png" alt="Islamic App" class="logo-icon">
+        <h2>PrayTime</h2>
+      </div>
+      <nav class="side-nav" id="main-nav">
+        <a href="index.html" class="nav-link"><i class="ph ph-house"></i> Home</a>
+        <a href="weather.html" class="nav-link"><i class="ph ph-cloud-sun"></i> Weather</a>
+        <a href="quran.html" class="nav-link active"><i class="ph-fill ph-book-open-text"></i> Quran</a>
+        <a href="masjid-finder.html" class="nav-link"><i class="ph ph-map-pin"></i> Mosques</a>
+        <a href="settings.html" class="nav-link"><i class="ph ph-gear"></i> Settings</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      
+      <!-- Loading State -->
+      <div id="loader" class="quran-loader">
+        <i class="ph ph-spinner ph-spin" style="font-size: 3rem; color: var(--accent);"></i>
+        <h3 style="font-weight: 600;">Loading Sacred Texts...</h3>
+      </div>
+
+      <!-- INDEX VIEW -->
+      <div id="surah-index" class="hidden">
+        <header class="top-header">
+          <div>
+            <h1>The Noble Quran</h1>
+            <br>
+            <p class="date" style="color: var(--text-muted);">Read and reflect</p>
+          </div>
+        </header>
+
+        <div class="quran-header-area">
+          <!-- Last Read Widget -->
+          <div id="last-read-container" class="last-read-widget hidden">
+            <div class="lr-info">
+              <div class="lr-icon"><i class="ph-fill ph-book-bookmark"></i></div>
+              <div class="lr-text">
+                <p>Continue Reading</p>
+                <h3 id="lr-surah-name">Surah Al-Baqarah</h3>
+              </div>
+            </div>
+            <div class="lr-action">
+              <button class="r-btn" id="lr-btn">Resume <i class="ph ph-arrow-right"></i></button>
+            </div>
+          </div>
+
+          <!-- Search Bar -->
+          <div class="search-input-group">
+            <i class="ri-search-line search-icon"></i>
+            <input type="text" id="surah-search" placeholder="Search Surah by name or translation...">
+          </div>
+        </div>
+        
+        <div class="surah-grid" id="surah-grid"></div>
+        
+        <div id="no-results" class="hidden" style="text-align: center; padding: 40px; color: var(--text-muted);">
+          <i class="ph ph-magnifying-glass" style="font-size: 3rem; margin-bottom: 12px; opacity: 0.5;"></i>
+          <h3>No Surahs found</h3>
+        </div>
+      </div>
+
+      <!-- READER VIEW -->
+      <div id="reader-view" class="hidden">
+        
+        <div class="reader-header">
+          <button class="r-btn" id="back-btn"><i class="ph ph-arrow-left"></i> Back</button>
+          
+          <div class="reader-title">
+            <h2 id="r-name-ar"></h2>
+            <span id="r-name-en"></span>
+          </div>
+
+          <div class="reader-tools">
+            <button class="r-btn" id="translate-toggle" title="Toggle English Translation"><i class="ph ph-translate"></i> EN</button>
+            <div class="font-controls">
+              <button id="font-decrease" title="Decrease Font"><i class="ph ph-minus"></i></button>
+              <button id="font-increase" title="Increase Font"><i class="ph ph-plus"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ayahs-container-card">
+          <div id="bismillah-header" class="bismillah hidden">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
+          <div id="ayahs-container"></div>
+        </div>
+
+        <div class="bottom-reader-nav">
+          <button class="r-btn" id="prev-surah-btn"><i class="ph ph-arrow-left"></i> Previous Surah</button>
+          <button class="r-btn" id="next-surah-btn" style="background: var(--text-main); color: var(--bg-color);">Next Surah <i class="ph ph-arrow-right"></i></button>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Shared Global Modals & Nav -->
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+  <div class="mobile-nav-sheet" id="mobile-nav-sheet">
+    <div class="drag-handle"></div>
+    <div class="modal-header">
+      <h3 style="font-weight: 700;">Menu</h3>
+      <button id="close-menu-btn" class="icon-btn"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="sheet-links">
+      <a href="index.html" class="nav-link"><i class="ph ph-house"></i> Home</a>
+      <a href="weather.html" class="nav-link"><i class="ph ph-cloud-sun"></i> Weather</a>
+      <a href="quran.html" class="nav-link active"><i class="ph-fill ph-book-open-text"></i> Quran</a>
+      <a href="masjid-finder.html" class="nav-link"><i class="ph ph-map-pin"></i> Mosques</a>
+      <a href="settings.html" class="nav-link"><i class="ph ph-gear"></i> Settings</a>
+    </div>
+  </div>
+  <nav class="bottom-nav" id="bottom-nav">
+    <a href="index.html" class="nav-link"><i class="ph ph-house"></i><span>Home</span></a>
+    <a href="quran.html" class="nav-link active"><i class="ph-fill ph-book-open-text"></i><span>Quran</span></a>
+    <a href="masjid-finder.html" class="nav-link"><i class="ph ph-map-pin"></i><span>Map</span></a>
+    <button class="nav-menu-btn" id="mobile-menu-btn"><i class="ri-menu-4-line"></i><span>Menu</span></button>
+  </nav>
+
+  <script src="src/script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const API_BASE = 'https://api.alquran.cloud/v1';
+        let surahs = [];
+        let currentSurahNumber = 1;
+        let fontSizeMultiplier = 1.0;
+        let showTranslation = localStorage.getItem('quranTranslation') === 'true';
+
+        const els = {
+            loader: document.getElementById('loader'),
+            index: document.getElementById('surah-index'),
+            grid: document.getElementById('surah-grid'),
+            reader: document.getElementById('reader-view'),
+            ayahs: document.getElementById('ayahs-container'),
+            backBtn: document.getElementById('back-btn'),
+            bismillah: document.getElementById('bismillah-header'),
+            arName: document.getElementById('r-name-ar'),
+            enName: document.getElementById('r-name-en'),
+            nextBtn: document.getElementById('next-surah-btn'),
+            prevBtn: document.getElementById('prev-surah-btn'),
+            searchInput: document.getElementById('surah-search'),
+            noResults: document.getElementById('no-results'),
+            translateToggle: document.getElementById('translate-toggle'),
+            
+            // Last Read Widget
+            lastReadContainer: document.getElementById('last-read-container'),
+            lrSurahName: document.getElementById('lr-surah-name'),
+            lrBtn: document.getElementById('lr-btn')
+        };
+
+        // --- Core Functions ---
+        const normalizeArabic = (text) => text.replace(/[\u0617-\u061A\u064B-\u0652]/g, "");
+        const toArabicNum = (n) => ("" + n).replace(/[0-9]/g, t => "٠١٢٣٤٥٦٧٨٩".slice(+t, +t+1));
+
+        function initLastRead() {
+            const saved = JSON.parse(localStorage.getItem('lastReadSurah'));
+            if (saved && saved.number) {
+                els.lastReadContainer.classList.remove('hidden');
+                els.lrSurahName.textContent = saved.name;
+                els.lrBtn.onclick = () => openSurah(saved.number);
+                els.lastReadContainer.onclick = () => openSurah(saved.number);
+            }
+        }
+
+        async function fetchIndex() {
+            try {
+                const res = await fetch(`${API_BASE}/surah`);
+                const data = await res.json();
+                surahs = data.data;
+                renderGrid(surahs);
+                initLastRead();
+                
+                els.loader.classList.add('hidden');
+                els.index.classList.remove('hidden');
+            } catch (error) {
+                els.loader.innerHTML = '<div style="color:var(--accent);"><i class="ph ph-warning-circle" style="font-size:3rem;"></i><h3>Network Error</h3></div>';
+            }
+        }
+
+        function renderGrid(data) {
+            els.grid.innerHTML = '';
+            if (data.length === 0) {
+                els.noResults.classList.remove('hidden');
+            } else {
+                els.noResults.classList.add('hidden');
+                data.forEach(s => {
+                    const card = document.createElement('div');
+                    card.className = "surah-card";
+                    card.innerHTML = `
+                        <div style="display: flex; gap: 16px; align-items: center;">
+                            <div class="surah-number">${s.number}</div>
+                            <div>
+                                <div class="surah-name-en">${s.englishName}</div>
+                                <div class="surah-details">${s.englishNameTranslation} • ${s.numberOfAyahs} Ayahs</div>
+                            </div>
+                        </div>
+                        <div class="surah-name-ar">${s.name.replace('سُورَةُ ', '')}</div>
+                    `;
+                    card.onclick = () => openSurah(s.number);
+                    els.grid.appendChild(card);
+                });
+            }
+        }
+
+        async function openSurah(number) {
+            currentSurahNumber = number;
+            
+            // UI State Shift
+            els.index.classList.add('hidden');
+            els.reader.classList.add('hidden');
+            els.loader.classList.remove('hidden');
+            document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'smooth' });
+
+            try {
+                // Fetch Arabic and English Concurrently for speed
+                const [arRes, enRes] = await Promise.all([
+                    fetch(`${API_BASE}/surah/${number}/quran-uthmani`),
+                    fetch(`${API_BASE}/surah/${number}/en.asad`)
+                ]);
+                
+                const arData = await arRes.json();
+                const enData = await enRes.json();
+                const surahInfo = arData.data;
+
+                // Save to Last Read
+                localStorage.setItem('lastReadSurah', JSON.stringify({ number: surahInfo.number, name: surahInfo.englishName }));
+                initLastRead();
+
+                // Setup Headers
+                els.arName.textContent = surahInfo.name;
+                els.enName.textContent = `${surahInfo.englishName} (${surahInfo.englishNameTranslation})`;
+                
+                if (number !== 1 && number !== 9) els.bismillah.classList.remove('hidden');
+                else els.bismillah.classList.add('hidden');
+
+                // Generate Ayah Blocks
+                let html = '';
+                surahInfo.ayahs.forEach((ayah, index) => {
+                    let arText = ayah.text;
+                    let enText = enData.data.ayahs[index].text;
+
+                    // Strip Bismillah from first ayah if needed
+                    if (ayah.numberInSurah === 1 && number !== 1 && number !== 9) {
+                        arText = arText.replace("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ", '').trim();
+                    }
+
+                    html += `
+                        <div class="ayah-block">
+                            <div class="ayah-ar">${arText} <span class="ayah-marker">${toArabicNum(ayah.numberInSurah)}</span></div>
+                            <div class="ayah-en ${showTranslation ? '' : 'hidden'}">${enText}</div>
+                        </div>
+                    `;
+                });
+                els.ayahs.innerHTML = html;
+
+                // Setup Pagination
+                els.prevBtn.style.display = number > 1 ? 'flex' : 'none'; 
+                els.nextBtn.style.display = number < 114 ? 'flex' : 'none';
+
+                // Setup Translation Toggle Button State
+                if(showTranslation) els.translateToggle.classList.add('active');
+                else els.translateToggle.classList.remove('active');
+
+                els.loader.classList.add('hidden');
+                els.reader.classList.remove('hidden');
+            } catch (error) {
+                alert("Failed to load Surah data.");
+                els.loader.classList.add('hidden');
+                els.index.classList.remove('hidden');
+            }
+        }
+
+        // --- Search Listener ---
+        els.searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            if (!query) return renderGrid(surahs);
+            
+            const normalizedQuery = normalizeArabic(query);
+            const filtered = surahs.filter(s => {
+                return s.englishName.toLowerCase().includes(normalizedQuery) || 
+                       normalizeArabic(s.name).includes(normalizedQuery) || 
+                       s.englishNameTranslation.toLowerCase().includes(normalizedQuery) || 
+                       s.number.toString() === normalizedQuery;
+            });
+            renderGrid(filtered);
+        });
+
+        // --- Controls Listeners ---
+        els.backBtn.onclick = () => {
+            els.reader.classList.add('hidden');
+            els.index.classList.remove('hidden');
+            document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        els.prevBtn.onclick = () => { if(currentSurahNumber > 1) openSurah(currentSurahNumber - 1); };
+        els.nextBtn.onclick = () => { if(currentSurahNumber < 114) openSurah(currentSurahNumber + 1); };
+
+        els.translateToggle.onclick = () => {
+            showTranslation = !showTranslation;
+            localStorage.setItem('quranTranslation', showTranslation);
+            els.translateToggle.classList.toggle('active', showTranslation);
+            
+            document.querySelectorAll('.ayah-en').forEach(el => {
+                if (showTranslation) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+        };
+
+        document.getElementById('font-increase').onclick = () => { document.documentElement.style.setProperty('--ayah-multiplier', Math.min(1.6, fontSizeMultiplier += 0.1)); };
+        document.getElementById('font-decrease').onclick = () => { document.documentElement.style.setProperty('--ayah-multiplier', Math.max(0.7, fontSizeMultiplier -= 0.1)); };
+
+        // Initialize App
+        fetchIndex();
+    });
+  </script>
+</body>
+</html>

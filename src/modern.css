@@ -619,3 +619,234 @@ a {
 
 
 
+
+
+
+
+
+
+
+
+
+
+/* =========================================
+   ORIGINAL DESKTOP SIDEBAR + COLLAPSE LOGIC
+   ========================================= */
+@media screen and (min-width: 901px) {
+  /* Add transitions to the original sidebar */
+  .sidebar {
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
+    overflow-x: hidden;
+    width: 280px; /* Your original width */
+  }
+  
+  /* Header Layout */
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 40px; /* Matches original logo margin */
+    height: 40px;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .logo-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  /* Target your original logo image */
+  .logo-icon {
+    width: 50px; 
+    min-width: 50px;
+    transition: opacity 0.2s ease;
+  }
+
+  .logo-text {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text-main);
+    transition: opacity 0.2s ease;
+    margin: 0;
+  }
+
+  /* Toggle Button Logic */
+  .toggle-btn {
+    background: transparent;
+    border: transparent;
+    /* background: var(--surface-color);
+    border: 1px solid var(--border-color); */
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    /* color: var(--text-muted); */
+        color: var(--text-main);
+font-size: 1.25rem;
+    opacity: 1; /* Always visible when expanded */
+    transition: all 0.2s ease;
+    position: absolute;
+    right: 0;
+    z-index: 10;
+  }
+
+  .toggle-btn:hover {
+    color: var(--text-main);
+    background: var(--border-color);
+  }
+
+  /* Original Nav Link Text Wrapping */
+  .side-nav a {
+    white-space: nowrap;
+  }
+
+  .side-nav a i {
+    min-width: 24px;
+    text-align: center;
+  }
+
+  .nav-text {
+    transition: opacity 0.2s ease;
+  }
+
+  /* Settings Footer Layout */
+  .sidebar-footer {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .footer-settings-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    padding: 8px 0;
+    border-radius: var(--radius-md);
+    transition: background 0.2s ease;
+  }
+
+  .footer-settings-link:hover {
+    background: var(--border-color);
+  }
+  .footer-settings-link.active {
+    background: #00ac8a34;
+    
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 4px;
+  }
+
+  .settings-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    color: var(--text-main);
+  }
+  .settings-avatar.active {
+background: var(--accent);
+  }
+
+  .settings-avatar i {
+    font-size: 20px;
+  }
+
+  .user-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .user-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+
+  .user-plan {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  /* =========================================
+     COLLAPSED STATE (DESKTOP ONLY)
+     ========================================= */
+  .sidebar.collapsed {
+    width: 90px;
+    padding: 24px 13px;
+    /* padding: 24px 16px; */
+  }
+
+  .sidebar.collapsed .sidebar-header {
+    justify-content: center;
+  }
+
+  .sidebar.collapsed .logo-wrapper {
+    gap: 0;
+  }
+
+  .sidebar.collapsed .logo-text {
+    opacity: 0;
+    width: 0;
+    visibility: hidden;
+  }
+
+  /* HIDE toggle by default in collapsed state */
+  .sidebar.collapsed .toggle-btn {
+    opacity: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
+    pointer-events: none;
+  }
+
+  /* SHOW toggle and HIDE logo on hover when collapsed */
+  .sidebar.collapsed .sidebar-header:hover .toggle-btn {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .sidebar.collapsed .sidebar-header:hover .logo-icon {
+    opacity: 0;
+  }
+
+  .sidebar.collapsed .side-nav a {
+    justify-content: center;
+    padding: 16px;
+    font-size: 25px;
+  }
+
+  .sidebar.collapsed .nav-text {
+    opacity: 0;
+    width: 0;
+    display: none;
+  }
+
+  .sidebar.collapsed .footer-settings-link {
+    justify-content: center;
+  }
+
+  .sidebar.collapsed .user-details {
+    display: none;
+  }
+}

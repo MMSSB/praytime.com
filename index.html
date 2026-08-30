@@ -37,7 +37,8 @@
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body>
-<body>
+
+
   <script>
     (function() {
       // Read stored theme or default to 'system'
@@ -55,7 +56,7 @@
   <!-- rest of your page -->
 
   <div class="app">
-    <aside class="sidebar" id="sidebar">
+    <!-- <aside class="sidebar" id="sidebar">
       <div class="logo">
         <img src="./src/pray.png" alt="Islamic App" class="logo-icon">
         <h2>PrayTime</h2>
@@ -69,8 +70,68 @@
                 <a href="masjid-finder.html" class="nav-link"><i class="ph ph-map-pin"></i> Masjid Finder</a>
         <a href="settings.html" class="nav-link"><i class="ph ph-gear"></i> Settings</a>
       </nav>
-    </aside>
+    </aside> -->
+<aside class="sidebar" id="sidebar">
+  <!-- ADD THIS SCRIPT RIGHT HERE -->
+    <script>
+      if (localStorage.getItem('sidebarState') === 'collapsed') {
+        document.getElementById('sidebar').classList.add('collapsed');
+      }
+    </script>
+  <!-- Header / Logo Area -->
+<!-- Header / Logo Area -->
+    <div class="sidebar-header">
+      <div class="logo-wrapper">
+        <img src="./src/pray.png" alt="Islamic App" class="logo-icon">
+        <h2 class="logo-text">PrayTime</h2>
+      </div>
+    <!-- Toggle Button -->
+    <button class="toggle-btn" id="toggle-btn">
+      <!-- <i class="ph ph-sidebar-simple"></i> -->
+      <i class="ph ph-sidebar"></i>
+       <!-- <i class="ri-side-bar-fill"></i> -->
+    </button>
+  </div>
 
+  <!-- Original Navigation Structure -->
+  <nav class="side-nav" id="main-nav">
+    <a href="index.html" class="nav-link active">
+      <i class="fa-solid fa-mosque"></i> 
+      <span class="nav-text">Pray Time</span>
+    </a>
+    <a href="weather.html" class="nav-link">
+      <i class="ph ph-cloud-sun"></i> 
+      <span class="nav-text">Weather</span>
+    </a>
+    <a href="quran.html" class="nav-link">
+      <i class="ph ph-book-open-text"></i> 
+      <span class="nav-text">Quran</span>
+    </a>
+    <a href="q-audio.html" class="nav-link">
+      <i class="ph ph-disc"></i> 
+      <span class="nav-text">Audio</span>
+    </a>
+    <a href="masjid-finder.html" class="nav-link">
+      <i class="ph ph-map-pin"></i> 
+      <span class="nav-text">Masjid Finder</span>
+    </a>
+  </nav>
+
+  <!-- Profile-Style Settings Footer -->
+  <div class="sidebar-footer">
+    <a href="settings.html" class="footer-settings-link">
+      <div class="user-info">
+        <div class="settings-avatar">
+          <i class="ph ph-gear"></i>
+        </div>
+        <div class="user-details">
+          <span class="user-name">Settings</span>
+          <span class="user-plan">App Preferences</span>
+        </div>
+      </div>
+    </a>
+  </div>
+</aside>
     <main class="main-content">
       <header class="top-header">
         <div>

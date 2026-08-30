@@ -634,3 +634,50 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
     };
 });
+
+
+
+
+
+
+
+
+
+
+
+
+// ==========================================
+    // SIDEBAR TOGGLE & PERSISTENCE
+    // ==========================================
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggle-btn');
+    
+    if (toggleBtn && sidebar) {
+        // Toggle and save state on click
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            sidebar.classList.toggle('collapsed');
+            
+            // Save the new state to local storage
+            if (sidebar.classList.contains('collapsed')) {
+                localStorage.setItem('sidebarState', 'collapsed');
+            } else {
+                localStorage.setItem('sidebarState', 'expanded');
+            }
+        });
+    }
+
+
+
+// // ==========================================
+//     // SIDEBAR TOGGLE LOGIC
+//     // ==========================================
+//     const sidebar = document.getElementById('sidebar');
+//     const toggleBtn = document.getElementById('toggle-btn');
+    
+//     if (toggleBtn && sidebar) {
+//         toggleBtn.addEventListener('click', (e) => {
+//             e.stopPropagation(); 
+//             sidebar.classList.toggle('collapsed');
+//         });
+//     }

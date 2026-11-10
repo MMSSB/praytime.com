@@ -892,9 +892,9 @@ body.is-editing .w-resize-corner {
 }
 
 /* Active or Next Prayer pops up like the highlighted icon in Image 1 & glows emerald like ASR in Image 3! */
-.dock-prayer-item.current
+/* .dock-prayer-item.current, */
 
-/* .dock-prayer-item.next */
+.dock-prayer-item.next
   {
   background: var(--accent-soft);
   border: 1.5px solid var(--accent);

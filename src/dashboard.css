@@ -62,7 +62,8 @@ body.light {
   -webkit-tap-highlight-color: transparent;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   min-height: 100dvh;
   background-color: var(--bg-color);
@@ -542,6 +543,7 @@ body.is-editing .canvas-stage {
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow-soft);
 }
+
 body.light .tv-widget[data-skin="glass"] {
   background: rgba(255, 255, 255, var(--card-opacity));
 }
@@ -891,8 +893,9 @@ body.is-editing .w-resize-corner {
 
 /* Active or Next Prayer pops up like the highlighted icon in Image 1 & glows emerald like ASR in Image 3! */
 .dock-prayer-item.current
-/* .dock-prayer-item.next  */
-{
+
+/* .dock-prayer-item.next */
+  {
   background: var(--accent-soft);
   border: 1.5px solid var(--accent);
   transform: translateY(-4px) scale(1.03);
@@ -1213,6 +1216,7 @@ dialog::backdrop {
 .s-scroll-content::-webkit-scrollbar {
   width: 8px;
 }
+
 .s-scroll-content::-webkit-scrollbar-thumb {
   background: var(--text-muted);
   border-radius: 99px;
@@ -1223,6 +1227,7 @@ dialog::backdrop {
   flex-direction: column;
   gap: 14px;
 }
+
 .s-section-pane.active {
   display: flex;
 }
@@ -1312,7 +1317,8 @@ dialog::backdrop {
   color: var(--text-muted);
 }
 
-.s-input, .s-select {
+.s-input,
+.s-select {
   padding: 8px 12px;
   border-radius: 10px;
   border: 1px solid var(--border-strong);
@@ -1370,6 +1376,7 @@ dialog::backdrop {
 .ios-switch:checked {
   background: var(--accent);
 }
+
 .ios-switch:checked::after {
   transform: translateX(20px);
 }
@@ -1462,12 +1469,14 @@ dialog::backdrop {
   .tv-shell {
     padding: 12px 14px 28px;
   }
+
   .canvas-stage {
     display: flex;
     flex-direction: column;
     gap: 14px;
     height: auto !important;
   }
+
   .tv-widget {
     position: relative !important;
     left: auto !important;
@@ -1476,16 +1485,20 @@ dialog::backdrop {
     height: auto !important;
     min-height: 110px;
   }
+
   .side-stack-container {
     flex-direction: row;
     flex-wrap: wrap;
   }
+
   .small-time-tile {
     min-width: 110px;
   }
+
   .prayer-dock-inner {
     grid-template-columns: repeat(3, 1fr);
   }
+
   .tv-top-dates {
     display: none;
   }
@@ -1495,9 +1508,11 @@ dialog::backdrop {
   .prayer-dock-inner {
     grid-template-columns: repeat(2, 1fr);
   }
+
   .tv-w-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+
   .edit-confirm-banner {
     width: 94vw;
     flex-wrap: wrap;

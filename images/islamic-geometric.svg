@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bg-grad" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#142e23"/>
+      <stop offset="100%" stop-color="#0a1510"/>
+    </radialGradient>
+    <pattern id="islamic-star" width="120" height="120" patternUnits="userSpaceOnUse">
+      <path d="M60 0 L75 45 L120 60 L75 75 L60 120 L45 75 L0 60 L45 45 Z" fill="none" stroke="rgba(0, 172, 137, 0.12)" stroke-width="1.5"/>
+      <circle cx="60" cy="60" r="28" fill="none" stroke="rgba(255, 255, 255, 0.04)" stroke-width="1"/>
+      <rect x="36" y="36" width="48" height="48" fill="none" stroke="rgba(0, 172, 137, 0.08)" stroke-width="1" transform="rotate(45 60 60)"/>
+    </pattern>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg-grad)"/>
+  <rect width="1920" height="1080" fill="url(#islamic-star)"/>
+  <circle cx="960" cy="540" r="480" fill="radial-gradient(circle, rgba(0, 172, 137, 0.08) 0%, transparent 70%)"/>
+</svg>

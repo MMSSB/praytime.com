@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <filter id="drop-shadow" x="-30%" y="-15%" width="170%" height="140%">
+      <feDropShadow dx="-16" dy="10" stdDeviation="24" flood-color="rgba(0,0,0,0.40)"/>
+    </filter>
+  </defs>
+  <rect width="1920" height="1080" fill="#111827"/>
+  <rect x="160" y="35" width="220" height="1010" rx="110" fill="#19263e" filter="url(#drop-shadow)"/>
+  <rect x="360" y="35" width="220" height="1010" rx="110" fill="#1d3356" filter="url(#drop-shadow)"/>
+  <rect x="560" y="35" width="220" height="1010" rx="110" fill="#1b3f6f" filter="url(#drop-shadow)"/>
+  <rect x="760" y="35" width="220" height="1010" rx="110" fill="#154c87" filter="url(#drop-shadow)"/>
+  <rect x="960" y="35" width="220" height="1010" rx="110" fill="#0c529e" filter="url(#drop-shadow)"/>
+  <rect x="1160" y="35" width="220" height="1010" rx="110" fill="#074589" filter="url(#drop-shadow)"/>
+  <rect x="1360" y="35" width="220" height="1010" rx="110" fill="#043467" filter="url(#drop-shadow)"/>
+  <rect x="1560" y="35" width="280" height="1010" rx="110" fill="#021f3d" filter="url(#drop-shadow)"/>
+</svg>
